@@ -63,15 +63,16 @@ export default function SignUp() {
                 title: "Signup failed",
                 description: message,
             })
+            setLoading(false);
             return;
         }
         if(status===200){
             toast({
-                variant: "success",
                 title: "Signup successful",
                 description: message,
             })
             setTimeout(()=>{
+                setLoading(false);
                 redirect("/login")
             },2000)
             

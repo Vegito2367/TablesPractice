@@ -4,10 +4,15 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { redirect } from "next/navigation";
 import { attemptLogin } from "@/utils/actions";
-export default function Login() {
-  const { toast } = useToast();
-  async function PreLogin(formData) {
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
+export default function Login() {
+  
+  const { toast } = useToast();
+  const [loading,setLoading]=useState(false);
+  async function PreLogin(formData) {
+    setLoading(true);
     const username = formData.get('username');
     const password = formData.get('password');
     if (password.length < 8) {
@@ -16,6 +21,7 @@ export default function Login() {
         title: "Password too short",
         description: "Password must be at least 8 characters long",
       })
+      setLoading(false);
       return;
 
     }
@@ -25,6 +31,7 @@ export default function Login() {
         title: "Invalid email",
         description: "Please enter a valid email",
       })
+      setLoading(false);
       return;
     }
 
@@ -41,6 +48,7 @@ export default function Login() {
         title: "Login failed",
         description: response,
       })
+      setLoading(false);
       return;
     }
     if(status===200){
@@ -49,7 +57,11 @@ export default function Login() {
         title: "Login successful",
         description: response,
       })
-      redirect("/dashboard")
+      setTimeout(()=>{
+        setLoading(false)
+        redirect("/dashboard")
+      },2000)
+      
     }
   }
 
@@ -65,7 +77,10 @@ export default function Login() {
           <div>
             <input name="password" id="password" type="password" placeholder="Password" className="bg-gray-800 text-white p-2 rounded w-full" />
           </div>
-          <Button className="h-10" variant="secondary" formAction={PreLogin}>Submit</Button>
+          <Button className="h-10" variant="secondary" disabled={loading} formAction={PreLogin}>
+            <Loader2 size={20} className={loading?"block":"hidden"} />
+            {loading?"Please Wait":"Submit"}
+          </Button>
         </form>
         <Button className="text-white" variant="link" onClick={() => { redirect("signup") }}>Sign Up</Button>
       </section>

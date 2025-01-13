@@ -7,17 +7,20 @@ export default async function Dashboard()
     if(error || !data.user){
         return(
             <>
-                <h1>Dashboard</h1>
-                <p> You are not logged in</p>
-                
+                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
+                    <h1>Dashboard</h1>
+                    <p> You are not logged in</p>
+                </section>
             </>
         )
     }
     else{
         return(
             <>
-                <h1>Dashboard</h1>
-                <p> You are logged in as {data.user.firstName}</p>
+               <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center">
+                    <h1>Dashboard</h1>
+                    <p> You are logged in as {data.user.email}</p>
+                </section>
             </>
         )
     }
