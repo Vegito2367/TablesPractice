@@ -1,10 +1,22 @@
+"use client"
 import { redirect } from "next/navigation";
-import { createClient } from "@/utils/server";
-export default async function Dashboard()
+import { validateLogin } from "@/utils/actions";
+import { Button } from "@/components/ui/button";
+import LoadingButton from "@/customComponents/loadingButton";
+import { useState } from "react";
+export default function Dashboard()
 {
-    const supabase = await createClient();
-    const {data ,error} = await supabase.auth.getUser();
-    if(error || !data.user){
+    const {status,response}={status:200,response:{user:{email:"tej.gumaste@gmail.com"}}}
+    const [loading,setLoading]=useState(false);
+
+    function handleClick(){
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false);
+        },2000)
+    }
+
+    if(status===400){
         return(
             <>
                 <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
@@ -14,12 +26,19 @@ export default async function Dashboard()
             </>
         )
     }
+
+    
     else{
         return(
             <>
-               <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center">
+               <section className="h-screen w-screen bg-gray-950 ">
+                <Button className="absolute top-5 right-0 " variant="secondary" >Logout</Button>
+                <LoadingButton callback={handleClick} loading={loading} title="Click me"/>
+                <div className="flex flex-col justify-center ">
                     <h1>Dashboard</h1>
-                    <p> You are logged in as {data.user.email}</p>
+                    <p> You are logged in as {response.user.email}</p>
+                </div>
+                    
                 </section>
             </>
         )
