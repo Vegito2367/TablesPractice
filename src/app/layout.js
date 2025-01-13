@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 // import "tailwindcss/tailwind.css"
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );
