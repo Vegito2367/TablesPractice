@@ -1,7 +1,6 @@
 "use server"
 import { redirect } from "next/navigation";
 import { createClient } from "./server";
-import { revalidatePath } from "next/cache";
 export async function attemptSignup(data) {
 
     const supabase = await createClient();
@@ -26,7 +25,7 @@ export async function attemptLogin(data) {
 } 
 
 
-export async function validateLogin(){
+export async function validateServerLogin(){
     const supabase = await createClient();
     const {data ,error} = await supabase.auth.getUser();
     if(error || !data){
@@ -41,7 +40,7 @@ export async function validateLogin(){
 
 export async function Logout() {
     const supabase = await createClient();
-    const {data,error} = await supabase.auth.signOut();
+    const {error} = await supabase.auth.signOut();
     if(error){
         return {status: 400, response: error.message}
     }
