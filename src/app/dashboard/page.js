@@ -7,26 +7,24 @@ import { useEffect, useState } from "react";
 import Attempt from "@/customComponents/attempt";
 export default function Dashboard() {
     const [data, setData] = useState({});
-    
-    // useEffect(() => {
-    //     console.log("Dashboard starts")
-    //     async function checkUser() {
-    //         console.log("code ran")
-    //         try{
-    //             const { status, response } = await validateLogin();
-    //             setData({ status: status, response: response });
-    //         }
-    //         catch(err){
-    //             console.log(err)
-    //         }
-            
-    //     }
-    //     checkUser();
-
-    // },[]);
-
     const [loading, setLoading] = useState(false);
-    console.log(data)
+    useEffect(() => {
+        async function checkUser() {
+            try{
+                const { status, response } = await validateLogin();
+                setData({ status: status, response: response });
+            }
+            catch(err){
+                console.log(err)
+            }
+            
+        }
+        checkUser();
+
+    },[]);
+
+    
+    console.log(data.status)
     function handleClick() {
         setLoading(true);
         setTimeout(() => {
@@ -34,16 +32,16 @@ export default function Dashboard() {
         }, 2000)
     }
 
-    // if (data.status === 400) {
-    //     return (
-    //         <>
-    //             <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
-    //                 <h1>Dashboard</h1>
-    //                 <p> You are not logged in</p>
-    //             </section>
-    //         </>
-    //     )
-    // }
+    if (data.status === 400) {
+        return (
+            <>
+                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
+                    <h1>Dashboard</h1>
+                    <p> You are not logged in</p>
+                </section>
+            </>
+        )
+    }
 
     const attempts=[
         {
@@ -92,6 +90,7 @@ export default function Dashboard() {
                     <div className="flex flex-col justify-center ">
                         <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
                         <p>each attempt, as a number of questions, each question has number of rights and wrongs.</p>
+                        <p>{data.response.user.email}</p>
                         <div className="w-1/2">
                             {attempts.map((attempt)=>{
                                 return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions} 
