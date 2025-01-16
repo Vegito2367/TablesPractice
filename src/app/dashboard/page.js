@@ -5,14 +5,21 @@ import { Button } from "@/components/ui/button";
 import LoadingButton from "@/customComponents/loadingButton";
 import { useEffect, useState } from "react";
 import Attempt from "@/customComponents/attempt";
+import { Logout } from "@/utils/actions";
+import { useToast } from "@/hooks/use-toast";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const { toast } = useToast();
     useEffect(() => {
         async function checkUser() {
             try{
                 const { status, response } = await validateLogin();
                 setData({ status: status, response: response });
+                if(status === 200){
+                    setLoggedIn(true);
+                }
             }
             catch(err){
                 console.log(err)
@@ -24,24 +31,15 @@ export default function Dashboard() {
     },[]);
 
     
-    console.log(data.status)
-    function handleClick() {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000)
-    }
+    console.log(data.response)
+        function handleClick() {
+            setLoading(true);
+            setTimeout(() => {
+                setLoading(false);
+            }, 2000)
+        }
 
-    if (data.status === 400) {
-        return (
-            <>
-                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
-                    <h1>Dashboard</h1>
-                    <p> You are not logged in</p>
-                </section>
-            </>
-        )
-    }
+    
 
     const attempts=[
         {
@@ -82,28 +80,62 @@ export default function Dashboard() {
     ]
 
     
+    async function handleLogout(){
+        handleClick();
+        if(loggedIn){
+            const {status, response} = await Logout();
+            if(status === 200){
+                toast({
+                    title: "Logout successful",
+                    description: "You will be redirected to the home page",
+                })
+                setTimeout(()=>{
+                    redirect("/")
+                },2000)
+            }
+            else{
+                toast({
+                    variant: "destructive",
+                    title: "Logout failed",
+                    description: response,
+                })
+            }
+
+        }
+    }
+        if (data.status === 400) {
+            return (
+                <>
+                    <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
+                    <Button className="absolute top-5 left-0" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
+                        <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
+                        <p> You are not logged in</p>
+                    </section>
+                </>
+            )
+        }
         return (
             <>
-                <section className="h-screen w-screen bg-gray-950">
-                    <Button className="absolute top-5 right-0 " variant="secondary" >Logout</Button>
-                    <LoadingButton callback={handleClick} loading={loading} title="Click me" />
-                    <div className="flex flex-col justify-center ">
-                        <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                        <p>each attempt, as a number of questions, each question has number of rights and wrongs.</p>
-                        <p>{data.response.user.email}</p>
-                        <div className="w-1/2">
-                            {attempts.map((attempt)=>{
-                                return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions} 
-                                numberOfRights={attempt.numberOfRights} 
-                                numberOfWrongs={attempt.numberOfWrongs}
-                                date={attempt.dateOfAttempt}
-                                />
-                            })}
-                        </div>
-                        
-                    </div>
+            <section className="h-screen w-screen bg-gray-950">
+                <LoadingButton loading={loading} classes="absolute top-5 right-0" variant="secondary" title="Logout" callback={handleLogout}/>
+                <Button className="absolute top-5 left-0" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
+                <div className="flex flex-col justify-center pt-5">
+                <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
+                <p>each attempt, as a number of questions, each question has number of rights and wrongs.</p>
+                {data.response && data.response.user && <p>{data.response.user.email}</p>}
+                <div className="w-1/2">
+                    {attempts.map((attempt) => {
+                    return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions} 
+                    numberOfRights={attempt.numberOfRights} 
+                    numberOfWrongs={attempt.numberOfWrongs}
+                    date={attempt.dateOfAttempt}
+                    />
+                    })}
+                </div>
+                
+                </div>
 
-                </section>
+            </section>
             </>
         )
     
