@@ -1,10 +1,10 @@
 "use client"
 import { redirect } from "next/navigation";
-import validateLogin from "./dashboardData";
+import validateLogin from "../middle";
 import { Button } from "@/components/ui/button";
 import LoadingButton from "@/customComponents/loadingButton";
 import { useEffect, useState } from "react";
-import Attempt from "@/customComponents/attempt";
+import Attempt from "@/customComponents/attemptBlob";
 import { Logout } from "@/utils/actions";
 import { useToast } from "@/hooks/use-toast";
 export default function Dashboard() {
@@ -117,11 +117,22 @@ export default function Dashboard() {
         return (
             <>
             <section className="h-screen w-screen bg-gray-950">
-                <LoadingButton loading={loading} classes="absolute top-5 right-0" variant="secondary" title="Logout" callback={handleLogout}/>
-                <Button className="absolute top-5 left-0" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
+                <div className="flex flex-row justify-center gap-5 w-screen">
+                    <div>
+                        <LoadingButton loading={loading} classes="" variant="secondary" title="Logout" callback={handleLogout}/>
+                    </div>
+                    <div>
+                        <Button className="" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
+                    </div>
+                    <div>
+                        <Button className="" variant="secondary" onClick={()=>{redirect("/attempt")}}>New Attempt</Button>
+                    </div>
+                    
+                </div>
+                
                 <div className="flex flex-col justify-center pt-5">
                 <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                <p>each attempt, as a number of questions, each question has number of rights and wrongs.</p>
+                <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
                 {data.response && data.response.user && <p>{data.response.user.email}</p>}
                 <div className="w-1/2">
                     {attempts.map((attempt) => {
