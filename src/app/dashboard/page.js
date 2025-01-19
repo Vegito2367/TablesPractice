@@ -7,11 +7,14 @@ import { useEffect, useState } from "react";
 import Attempt from "@/customComponents/attemptBlob";
 import { Logout } from "@/utils/actions";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const { toast } = useToast();
+    const slugLength=8;
+    const router = useRouter();
     useEffect(() => {
         async function checkUser() {
             try{
@@ -31,7 +34,6 @@ export default function Dashboard() {
     },[]);
 
     
-    console.log(data.response)
         function handleClick() {
             setLoading(true);
             setTimeout(() => {
@@ -103,6 +105,22 @@ export default function Dashboard() {
 
         }
     }
+
+    function newAttempt(){
+        console.log("new attempt")
+        function generateSlug() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let slug = '';
+            for (let i = 0; i < slugLength; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                slug += characters[randomIndex];
+            }
+            return slug;
+        }
+
+        const newSlug = generateSlug();
+        router.push(`/attempt/${newSlug}`);
+    }
         if (data.status === 400) {
             return (
                 <>
@@ -125,7 +143,7 @@ export default function Dashboard() {
                         <Button className="" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={()=>{redirect("/attempt")}}>New Attempt</Button>
+                        <Button className="" variant="secondary" onClick={newAttempt}>New Attempt</Button>
                     </div>
                     
                 </div>

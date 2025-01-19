@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import validateLogin from "../middle";
+import validateLogin from "../../middle";
 import Timer from "@/customComponents/timer";
 import {
     AlertDialog,
@@ -14,16 +14,22 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-export default function Attempt() {
-
+export default function Attempt({params}) {
+    
     const [loggedIn, setLoggedIn] = useState(false);
     const [data, setData] = useState({});
     const [showDialog, setShowDialog] = useState(false);
+    const [slug, setSlug] = useState("");
+    const [userID, setUserID] = useState("");
     useEffect(() => {
         async function checkUser() {
             try {
+
                 const { status, response } = await validateLogin();
                 setData({ status: status, response: response });
+                setUserID(response.user.id);
+                const tempslug =(await params).slug;
+                setSlug(tempslug);
                 if (status === 200) {
                     setLoggedIn(true);
                 }
@@ -35,6 +41,7 @@ export default function Attempt() {
         }
         checkUser();
     }, [])
+
 
     function handleDialog() {
         setShowDialog(!showDialog);
@@ -52,6 +59,8 @@ export default function Attempt() {
             <section className="h-screen w-screen bg-gray-950 text-white">
                 <h1>Attempt page</h1>
                 <p>user logged in is : {data.response.user.email}</p>
+                <p>Slug: {slug}</p>
+                <p>user ID: {userID}</p>
                 <Timer totalTime={10} callback={handleDialog} />
 
 
