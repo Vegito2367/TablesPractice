@@ -8,42 +8,47 @@ import Attempt from "@/customComponents/attemptBlob";
 import { Logout } from "@/utils/actions";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
     const { toast } = useToast();
-    const slugLength=8;
+    const slugLength = 8;
     const router = useRouter();
+    const [includeAddition, setIncludeAddition] = useState(false);
+    const [includeSubtraction, setIncludeSubtraction] = useState(false);
     useEffect(() => {
         async function checkUser() {
-            try{
+            try {
                 const { status, response } = await validateLogin();
                 setData({ status: status, response: response });
-                if(status === 200){
+                if (status === 200) {
                     setLoggedIn(true);
                 }
             }
-            catch(err){
+            catch (err) {
                 console.log(err)
             }
-            
+
         }
         checkUser();
 
-    },[]);
+    }, []);
 
-    
-        function handleClick() {
-            setLoading(true);
-            setTimeout(() => {
-                setLoading(false);
-            }, 2000)
-        }
 
-    
+    function handleClick() {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 2000)
+    }
 
-    const attempts=[
+
+
+    const attempts = [
         {
             id: 1,
             numberOfQuestions: 10,
@@ -81,21 +86,21 @@ export default function Dashboard() {
         },
     ]
 
-    
-    async function handleLogout(){
+
+    async function handleLogout() {
         handleClick();
-        if(loggedIn){
-            const {status, response} = await Logout();
-            if(status === 200){
+        if (loggedIn) {
+            const { status, response } = await Logout();
+            if (status === 200) {
                 toast({
                     title: "Logout successful",
                     description: "You will be redirected to the home page",
                 })
-                setTimeout(()=>{
+                setTimeout(() => {
                     redirect("/")
-                },2000)
+                }, 2000)
             }
-            else{
+            else {
                 toast({
                     variant: "destructive",
                     title: "Logout failed",
@@ -106,7 +111,7 @@ export default function Dashboard() {
         }
     }
 
-    function newAttempt(){
+    function newAttempt() {
         console.log("new attempt")
         function generateSlug() {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -121,51 +126,88 @@ export default function Dashboard() {
         const newSlug = generateSlug();
         router.push(`/attempt/${newSlug}`);
     }
-        if (data.status === 400) {
-            return (
-                <>
-                    <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
-                    <Button className="absolute top-5 left-0" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
-                        <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                        <p> You are not logged in</p>
-                    </section>
-                </>
-            )
-        }
+    if (data.status === 400) {
         return (
             <>
-            <section className="h-screen w-screen bg-gray-950">
+                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
+                    <Button className="absolute top-5 left-0" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
+                    <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
+                    <p> You are not logged in</p>
+                </section>
+            </>
+        )
+    }
+    return (
+        <>
+            <section className="w-screen bg-gray-950">
                 <div className="flex flex-row justify-center gap-5 w-screen">
                     <div>
-                        <LoadingButton loading={loading} classes="" variant="secondary" title="Logout" callback={handleLogout}/>
+                        <LoadingButton loading={loading} classes="" variant="secondary" title="Logout" callback={handleLogout} />
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={()=>{redirect("/")}}>Home</Button>
+                        <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
                     </div>
                     <div>
                         <Button className="" variant="secondary" onClick={newAttempt}>New Attempt</Button>
                     </div>
-                    
+
                 </div>
-                
+
                 <div className="flex flex-col justify-center pt-5">
-                <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
-                {data.response && data.response.user && <p>{data.response.user.email}</p>}
-                <div className="w-1/2">
-                    {attempts.map((attempt) => {
-                    return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions} 
-                    numberOfRights={attempt.numberOfRights} 
-                    numberOfWrongs={attempt.numberOfWrongs}
-                    date={attempt.dateOfAttempt}
-                    />
-                    })}
-                </div>
-                
+                    <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
+                    <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
+                    {data.response && data.response.user && <p>{data.response.user.email}</p>}
+                    <p>Addition: {includeAddition} Subtraction: {includeSubtraction}</p>
+                    <div className="flex flex-row">
+                        <div name="attempts" className="w-1/2">
+                            {attempts.map((attempt) => {
+                                return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions}
+                                    numberOfRights={attempt.numberOfRights}
+                                    numberOfWrongs={attempt.numberOfWrongs}
+                                    date={attempt.dateOfAttempt}
+                                />
+                            })}
+                        </div>
+                        <div name="constraints" className="text-white w-1/2 items-center flex flex-col border-2 border-white rounded-md">
+                        <p className="text-3xl mt-3">Constraints</p>
+                        <Separator decorative={true} className="opacity-35 m-3" />
+                            <form className="w-2/6">
+                                <div name="additionBox" className="flex flex-col items-center">
+                                    <p className="text-center text-2xl">Addition</p>
+                                    <div className="flex flex-row gap-2 items-center">
+                                       <p>Lower Limit:</p> 
+                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
+                                    </div>
+                                    <div className="flex flex-row gap-2 items-center">
+                                       <p>Upper Limit:</p> 
+                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
+                                    </div>
+                                    Include this attempt
+                                    <Checkbox onCheckedChange={()=>{setIncludeAddition(!includeAddition)}} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
+                                </div>
+
+                                <Separator decorative={true} className="opacity-35 m-3" />
+                                <div name="subtractionBox" className="flex flex-col items-center">
+                                    <p className="text-center text-2xl">Subtraction</p>
+                                    <div className="flex flex-row gap-2 items-center">
+                                       <p>Lower Limit:</p> 
+                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" label="Lower Limit" />
+                                    </div>
+                                    <div className="flex flex-row gap-2 items-center">
+                                       <p>Upper Limit:</p> 
+                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" label="Upper Limit" />
+                                    </div>
+                                    Include this attempt
+                                    <Checkbox className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" onCheckedChange={()=>{setIncludeSubtraction(!includeSubtraction)}} />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
                 </div>
 
             </section>
-            </>
-        )
-    
+        </>
+    )
+
 }

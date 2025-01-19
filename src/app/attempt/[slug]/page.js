@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import validateLogin from "../../middle";
 import Timer from "@/customComponents/timer";
+import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -13,9 +14,11 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import LoadingButton from "@/customComponents/loadingButton";
+import { redirect } from "next/navigation";
 
-export default function Attempt({params}) {
-    
+export default function Attempt({ params }) {
+
     const [loggedIn, setLoggedIn] = useState(false);
     const [data, setData] = useState({});
     const [showDialog, setShowDialog] = useState(false);
@@ -28,7 +31,7 @@ export default function Attempt({params}) {
                 const { status, response } = await validateLogin();
                 setData({ status: status, response: response });
                 setUserID(response.user.id);
-                const tempslug =(await params).slug;
+                const tempslug = (await params).slug;
                 setSlug(tempslug);
                 if (status === 200) {
                     setLoggedIn(true);
@@ -57,12 +60,20 @@ export default function Attempt({params}) {
     else {
         return (
             <section className="h-screen w-screen bg-gray-950 text-white">
+                <div className="flex flex-row justify-center gap-5 w-screen">
+                    <div>
+                        <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
+                    </div>
+                    <div>
+                        <Button className="" variant="secondary" onClick={()=>{redirect("/dashboard")}}>Dashboard</Button>
+                    </div>
+
+                </div>
                 <h1>Attempt page</h1>
                 <p>user logged in is : {data.response.user.email}</p>
                 <p>Slug: {slug}</p>
                 <p>user ID: {userID}</p>
                 <Timer totalTime={10} callback={handleDialog} />
-
 
                 <AlertDialog open={showDialog} onOpenChange={handleDialog}>
                     <AlertDialogContent>
@@ -75,6 +86,9 @@ export default function Attempt({params}) {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
+
+
+
 
             </section>
         )
