@@ -126,6 +126,26 @@ export default function Dashboard() {
         const newSlug = generateSlug();
         router.push(`/attempt/${newSlug}`);
     }
+
+    function savePreferences(formData){
+        console.log(formData)
+        const llad=formData.get("lowerLimitAdd");
+        const ulad=formData.get("upperLimitAdd");
+        const llsub=formData.get("lowerLimitSub");
+        const ulsub=formData.get("upperLimitSub");
+        const additionObject={
+            lowerLimit:llad,
+            upperLimit:ulad,
+            include:includeAddition
+        }
+        const subtractionObject={
+            lowerLimit:llsub,
+            upperLimit:ulsub,
+            include:includeSubtraction
+        }
+        console.log(additionObject)
+        console.log(subtractionObject)
+    }
     if (data.status === 400) {
         return (
             <>
@@ -171,16 +191,16 @@ export default function Dashboard() {
                         <div name="constraints" className="text-white w-1/2 items-center flex flex-col border-2 border-white rounded-md">
                         <p className="text-3xl mt-3">Constraints</p>
                         <Separator decorative={true} className="opacity-35 m-3" />
-                            <form className="w-2/6">
+                            <form className="w-2/6 flex flex-col items-center gap-4">
                                 <div name="additionBox" className="flex flex-col items-center">
                                     <p className="text-center text-2xl">Addition</p>
                                     <div className="flex flex-row gap-2 items-center">
                                        <p>Lower Limit:</p> 
-                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
+                                        <input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                        <p>Upper Limit:</p> 
-                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
+                                        <input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
                                     </div>
                                     Include this attempt
                                     <Checkbox onCheckedChange={()=>{setIncludeAddition(!includeAddition)}} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
@@ -200,6 +220,7 @@ export default function Dashboard() {
                                     Include this attempt
                                     <Checkbox className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" onCheckedChange={()=>{setIncludeSubtraction(!includeSubtraction)}} />
                                 </div>
+                                <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
                             </form>
                         </div>
                     </div>
