@@ -27,7 +27,7 @@ export async function attemptSignup(signUpdata) {
 export async function attemptLogin(data) {
     console.log(data)
     const supabase = await createClient();
-    const { user, error } = await supabase.auth.signInWithPassword(data)
+    const { error } = await supabase.auth.signInWithPassword(data)
     if (error) {
         return {status: 400, response: error.message}
     }

@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { sendMathProps } from "../middle";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -41,11 +40,8 @@ export default function Dashboard() {
     }, []);
 
 
-    function handleClick() {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-        }, 2000)
+    function debugFunction() {
+        console.log(includeAddition, includeSubtraction)
     }
 
 
@@ -128,24 +124,32 @@ export default function Dashboard() {
         const newSlug = generateSlug();
         router.push(`/attempt/${newSlug}`);
     }
+    function resetCheckboxes()
+    {
+        setIncludeAddition(false);
+        setIncludeSubtraction(false);
+    }
 
     async function savePreferences(formData) {
 
         let atleatstOneOp=false
-        for (const inclusion in operations){
-            if(inclusion){
-                atleatstOneOp=true
+        for (let i = 0; i < operations.length; i++) {
+            if (operations[i]) {
+                atleatstOneOp=true;
                 break;
             }
         }
+        console.log(atleatstOneOp,operations)
         if(!atleatstOneOp){
             toast({
                 variant: "destructive",
                 title: "No operation selected",
                 description: "Please select at least one operation"
             })
+            resetCheckboxes();
             return;
         }
+        
         const llad = Number(formData.get("lowerLimitAdd"));
         const ulad = Number(formData.get("upperLimitAdd"));
         const llsub = Number(formData.get("lowerLimitSub"));
@@ -158,6 +162,7 @@ export default function Dashboard() {
                     title: "Invalid addition input",
                     description: "Please enter a number"
                 })
+                resetCheckboxes();
                 return;
             }
 
@@ -167,6 +172,7 @@ export default function Dashboard() {
                     title: "Invalid addition input",
                     description: "Please enter a number greater than 0"
                 })
+                resetCheckboxes();
                 return;
             }
 
@@ -176,6 +182,7 @@ export default function Dashboard() {
                     title: "Invalid Addition limits",
                     description: "Upper limit must be greater than lower limit"
                 })
+                resetCheckboxes();
                 return;
             }
         }
@@ -187,6 +194,7 @@ export default function Dashboard() {
                     title: "Invalid input",
                     description: "Please enter a number"
                 })
+                resetCheckboxes();
                 return;
             }
 
@@ -196,6 +204,7 @@ export default function Dashboard() {
                     title: "Invalid input",
                     description: "Please enter a number greater than 0"
                 })
+                resetCheckboxes();
                 return;
             }
 
@@ -207,6 +216,7 @@ export default function Dashboard() {
                     title: "Invalid Subtraction limits",
                     description: "Upper limit must be greater than lower limit"
                 })
+                resetCheckboxes();
                 return;
             }
         }
@@ -231,8 +241,12 @@ export default function Dashboard() {
                 ...subtractionObject
             }
         }
-        const {status, response}= await sendMathProps(mathProps);
-
+        const res= await fetch("/api/initializeEngine",{
+            method:"POST",
+            body:JSON.stringify(mathProps)
+        })
+        const {status,response}=await res.json();
+        console.log(status,response)
         if(status===200){
             toast({
                 title: "Preferences saved",
@@ -246,6 +260,8 @@ export default function Dashboard() {
                 description: response,
             })
         }
+        resetCheckboxes();
+        
         
     }
     if (data.status === 400) {
@@ -279,7 +295,7 @@ export default function Dashboard() {
                     <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
                     <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
                     {data.response && data.response.user && <p>{data.response.user.email}</p>}
-                    <p>Addition: {includeAddition} Subtraction: {includeSubtraction}</p>
+                    <Button className="mt-5" variant="secondary" onClick={debugFunction}>Click me</Button>
                     <div className="flex flex-row">
                         <div name="attempts" className="w-1/2">
                             {attempts.map((attempt) => {
@@ -298,14 +314,15 @@ export default function Dashboard() {
                                     <p className="text-center text-2xl">Addition</p>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Lower Limit:</p>
-                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
+                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} label="Lower Limit" />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Upper Limit:</p>
-                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
+                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} label="Upper Limit" />
                                     </div>
                                     Include this attempt
-                                    <Checkbox onCheckedChange={() => { setIncludeAddition(!includeAddition) }} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
+                                    <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
+
                                 </div>
 
                                 <Separator decorative={true} className="opacity-35 m-3" />
@@ -313,14 +330,14 @@ export default function Dashboard() {
                                     <p className="text-center text-2xl">Subtraction</p>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Lower Limit:</p>
-                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" label="Lower Limit" />
+                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} label="Lower Limit" />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Upper Limit:</p>
-                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" label="Upper Limit" />
+                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} label="Upper Limit" />
                                     </div>
                                     Include this attempt
-                                    <Checkbox className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" onCheckedChange={() => { setIncludeSubtraction(!includeSubtraction) }} />
+                                    <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" />
                                 </div>
                                 <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
                             </form>
