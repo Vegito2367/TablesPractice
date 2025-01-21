@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import validateLogin from "../../middle";
 import Timer from "@/customComponents/timer";
 import { Button } from "@/components/ui/button";
+import QuestionBox from "@/customComponents/questionBox";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -86,7 +87,7 @@ export default function Attempt({ params }) {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-
+                <QuestionBox />
 
 
 
