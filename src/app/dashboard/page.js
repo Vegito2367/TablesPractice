@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { sendMathProps } from "../middle";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -20,6 +21,7 @@ export default function Dashboard() {
     const router = useRouter();
     const [includeAddition, setIncludeAddition] = useState(false);
     const [includeSubtraction, setIncludeSubtraction] = useState(false);
+    const operations=[includeAddition, includeSubtraction]
     useEffect(() => {
         async function checkUser() {
             try {
@@ -111,7 +113,7 @@ export default function Dashboard() {
         }
     }
 
-    function newAttempt() {
+    async function newAttempt() {
         console.log("new attempt")
         function generateSlug() {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -127,24 +129,124 @@ export default function Dashboard() {
         router.push(`/attempt/${newSlug}`);
     }
 
-    function savePreferences(formData){
-        console.log(formData)
-        const llad=formData.get("lowerLimitAdd");
-        const ulad=formData.get("upperLimitAdd");
-        const llsub=formData.get("lowerLimitSub");
-        const ulsub=formData.get("upperLimitSub");
-        const additionObject={
-            lowerLimit:llad,
-            upperLimit:ulad,
-            include:includeAddition
+    async function savePreferences(formData) {
+
+        let atleatstOneOp=false
+        for (const inclusion in operations){
+            if(inclusion){
+                atleatstOneOp=true
+                break;
+            }
         }
-        const subtractionObject={
-            lowerLimit:llsub,
-            upperLimit:ulsub,
-            include:includeSubtraction
+        if(!atleatstOneOp){
+            toast({
+                variant: "destructive",
+                title: "No operation selected",
+                description: "Please select at least one operation"
+            })
+            return;
         }
-        console.log(additionObject)
-        console.log(subtractionObject)
+        const llad = Number(formData.get("lowerLimitAdd"));
+        const ulad = Number(formData.get("upperLimitAdd"));
+        const llsub = Number(formData.get("lowerLimitSub"));
+        const ulsub = Number(formData.get("upperLimitSub"));
+
+        if (includeAddition) {
+            if (isNaN(llad) || isNaN(ulad)) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid addition input",
+                    description: "Please enter a number"
+                })
+                return;
+            }
+
+            if (llad === 0 || ulad === 0) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid addition input",
+                    description: "Please enter a number greater than 0"
+                })
+                return;
+            }
+
+            if (llad >= ulad) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Addition limits",
+                    description: "Upper limit must be greater than lower limit"
+                })
+                return;
+            }
+        }
+
+        if (includeSubtraction) {
+            if (isNaN(llsub) || isNaN(ulsub)) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid input",
+                    description: "Please enter a number"
+                })
+                return;
+            }
+
+            if (llsub === 0 || ulsub === 0) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid input",
+                    description: "Please enter a number greater than 0"
+                })
+                return;
+            }
+
+
+
+            if (llsub >= ulsub) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Subtraction limits",
+                    description: "Upper limit must be greater than lower limit"
+                })
+                return;
+            }
+        }
+
+
+
+        const additionObject = {
+            lowerLimit: llad,
+            upperLimit: ulad,
+            include: includeAddition
+        }
+        const subtractionObject = {
+            lowerLimit: llsub,
+            upperLimit: ulsub,
+            include: includeSubtraction
+        }
+        const mathProps = {
+            "addition": {
+                ...additionObject
+            },
+            "subtraction": {
+                ...subtractionObject
+            }
+        }
+        const {status, response}= await sendMathProps(mathProps);
+
+        if(status===200){
+            toast({
+                title: "Preferences saved",
+                description: response,
+            })
+        }
+        if(status===400){
+            toast({
+                variant: "destructive",
+                title: "Error Saving Preferences. Please try again",
+                description: response,
+            })
+        }
+        
     }
     if (data.status === 400) {
         return (
@@ -189,36 +291,36 @@ export default function Dashboard() {
                             })}
                         </div>
                         <div name="constraints" className="text-white w-1/2 items-center flex flex-col border-2 border-white rounded-md">
-                        <p className="text-3xl mt-3">Constraints</p>
-                        <Separator decorative={true} className="opacity-35 m-3" />
+                            <p className="text-3xl mt-3">Constraints</p>
+                            <Separator decorative={true} className="opacity-35 m-3" />
                             <form className="w-2/6 flex flex-col items-center gap-4">
                                 <div name="additionBox" className="flex flex-col items-center">
                                     <p className="text-center text-2xl">Addition</p>
                                     <div className="flex flex-row gap-2 items-center">
-                                       <p>Lower Limit:</p> 
-                                        <input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
+                                        <p>Lower Limit:</p>
+                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" label="Lower Limit" />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
-                                       <p>Upper Limit:</p> 
-                                        <input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
+                                        <p>Upper Limit:</p>
+                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" label="Upper Limit" />
                                     </div>
                                     Include this attempt
-                                    <Checkbox onCheckedChange={()=>{setIncludeAddition(!includeAddition)}} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
+                                    <Checkbox onCheckedChange={() => { setIncludeAddition(!includeAddition) }} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
                                 </div>
 
                                 <Separator decorative={true} className="opacity-35 m-3" />
                                 <div name="subtractionBox" className="flex flex-col items-center">
                                     <p className="text-center text-2xl">Subtraction</p>
                                     <div className="flex flex-row gap-2 items-center">
-                                       <p>Lower Limit:</p> 
+                                        <p>Lower Limit:</p>
                                         <Input name="lowerLimitSub" id="lowerLimitSub" type="number" label="Lower Limit" />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
-                                       <p>Upper Limit:</p> 
+                                        <p>Upper Limit:</p>
                                         <Input name="upperLimitSub" id="upperLimitSub" type="number" label="Upper Limit" />
                                     </div>
                                     Include this attempt
-                                    <Checkbox className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" onCheckedChange={()=>{setIncludeSubtraction(!includeSubtraction)}} />
+                                    <Checkbox className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" onCheckedChange={() => { setIncludeSubtraction(!includeSubtraction) }} />
                                 </div>
                                 <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
                             </form>
