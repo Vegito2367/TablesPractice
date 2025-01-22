@@ -1,11 +1,18 @@
-"use server"
-export async function MathEngine(props){
-    let status=400;
-    let response="Math failed";
-    console.log(props)
-    
-    return {status: 200, response: "Math successful"}
-}
+export default class MathEngine {
+    constructor(attemptSlug,props) {
+        this.constraints=props;
+        this.attemptSlug=attemptSlug;
+        this.questions=[];
+        this.types=[]
+        for (const questionType in this.constraints){
+            this.types.push(questionType);
+        }
+    }
 
+    get getTypes(){
+        return this.types;
+    }
+
+}
 
 //Potentially implement a math engine here

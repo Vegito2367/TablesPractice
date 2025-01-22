@@ -51,6 +51,20 @@ export default function Attempt({ params }) {
         setShowDialog(!showDialog);
     }
 
+    async function testBackend(){
+        const response = await fetch(`/api/questions?slug=${slug}`,{
+            method:"GET",
+        })
+        try{
+            const data = await response.json();
+            console.log(data);
+        }
+        catch(e){
+            console.log(e);
+        }
+    
+    }
+
     if (!loggedIn) {
         return (
             <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
@@ -67,6 +81,9 @@ export default function Attempt({ params }) {
                     </div>
                     <div>
                         <Button className="" variant="secondary" onClick={()=>{redirect("/dashboard")}}>Dashboard</Button>
+                    </div>
+                    <div>
+                        <Button className="" variant="secondary" onClick={testBackend}>Test Backend</Button>
                     </div>
 
                 </div>

@@ -20,7 +20,8 @@ export default function Dashboard() {
     const router = useRouter();
     const [includeAddition, setIncludeAddition] = useState(false);
     const [includeSubtraction, setIncludeSubtraction] = useState(false);
-    const operations=[includeAddition, includeSubtraction]
+    const operations = [includeAddition, includeSubtraction]
+    const [props,setProps] = useState({});
     useEffect(() => {
         async function checkUser() {
             try {
@@ -120,27 +121,43 @@ export default function Dashboard() {
             }
             return slug;
         }
-
         const newSlug = generateSlug();
+        const response = await fetch("/api/startingEngine", {
+            method: "POST",
+            body: JSON.stringify({
+                attemtptSlug: newSlug,
+                constraints: props
+            })
+        })
+        const data = await response.json();
+        if(data.status===400){
+            toast({
+                variant: "destructive",
+                title: "Error Occured!",
+                description: data.response
+            })
+            return;
+        }
+
+        
         router.push(`/attempt/${newSlug}`);
     }
-    function resetCheckboxes()
-    {
+    function resetCheckboxes() {
         setIncludeAddition(false);
         setIncludeSubtraction(false);
     }
 
     async function savePreferences(formData) {
 
-        let atleatstOneOp=false
+        let atleatstOneOp = false
         for (let i = 0; i < operations.length; i++) {
             if (operations[i]) {
-                atleatstOneOp=true;
+                atleatstOneOp = true;
                 break;
             }
         }
-        console.log(atleatstOneOp,operations)
-        if(!atleatstOneOp){
+        console.log(atleatstOneOp, operations)
+        if (!atleatstOneOp) {
             toast({
                 variant: "destructive",
                 title: "No operation selected",
@@ -149,7 +166,7 @@ export default function Dashboard() {
             resetCheckboxes();
             return;
         }
-        
+
         const llad = Number(formData.get("lowerLimitAdd"));
         const ulad = Number(formData.get("upperLimitAdd"));
         const llsub = Number(formData.get("lowerLimitSub"));
@@ -241,28 +258,15 @@ export default function Dashboard() {
                 ...subtractionObject
             }
         }
-        const res= await fetch("/api/initializeEngine",{
-            method:"POST",
-            body:JSON.stringify(mathProps)
+
+        setProps(mathProps);
+        toast({
+            title: "Preferences saved",
+            description: "Preferences saved successfully",
         })
-        const {status,response}=await res.json();
-        console.log(status,response)
-        if(status===200){
-            toast({
-                title: "Preferences saved",
-                description: response,
-            })
-        }
-        if(status===400){
-            toast({
-                variant: "destructive",
-                title: "Error Saving Preferences. Please try again",
-                description: response,
-            })
-        }
         resetCheckboxes();
-        
-        
+
+
     }
     if (data.status === 400) {
         return (
