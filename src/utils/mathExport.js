@@ -1,21 +1,40 @@
 import MathEngine from './math';
 
+
+
 const mathEngineInstances = new Map();  // Stores instances per attempt slug
 
 export async function createEngine(slug,cons){
-    if(mathEngineInstances.has(slug)){
-        mathEngineInstances.delete(slug);
-        mathEngineInstances.set(attemptSlug, new MathEngine(attemptSlug,cons));
+    try{
+        if(mathEngineInstances.has(slug)){
+            mathEngineInstances.delete(slug);
+        }
+        
+        mathEngineInstances.set(slug, new MathEngine(slug,cons));
+        
+        return {message: "Engine succesfully created", verification: mathEngineInstances.get(slug).toString()};
     }
-    return "Engine succesfully created"
+    catch(e){
+        console.log(e);
+        return {status:500, response: "Status 500: check console"};
+    }
+    
 }
 export async function getMathEngine(attemptSlug) {
-    if (!mathEngineInstances.has(attemptSlug)) {
-        return "No engine found";
-        
+    try{
+        if (!mathEngineInstances.has(attemptSlug)) {
+            return {message: "Engine not found - Try reloading dashboard and try again", object: null};
+        }
+        const engine = mathEngineInstances.get(attemptSlug);
+        return {message: "Engine found", object: engine};
     }
-    return mathEngineInstances.get(attemptSlug);
+    
+    catch(e){
+        console.log(e);
+        return {status:500, response: "Status 500: check console"};
+    }
 }
+    
 
 export async function deleteMathEngine(attemptSlug) {
     mathEngineInstances.delete(attemptSlug);

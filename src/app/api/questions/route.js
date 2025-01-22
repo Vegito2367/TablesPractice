@@ -4,13 +4,15 @@ import { NextResponse } from "next/server";
 export async function GET(request){
     const url = new URL(request.url);
     const attemptSlug = url.searchParams.get("slug");
-    
+    console.log("question GET Request",attemptSlug)
     try{
         if(attemptSlug){
-            const engine = await getMathEngine(attemptSlug);
-            console.log(engine.toString());
+            const data = await getMathEngine(attemptSlug);
+            const engine = await data.object;
 
-            return NextResponse.json({status:200});
+            console.log(engine)
+            return NextResponse.json({status:200, payload: engine.types});
+            
         }
         
         return NextResponse.json({status:400, response: "Invalid slug"})

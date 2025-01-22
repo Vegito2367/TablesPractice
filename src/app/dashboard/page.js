@@ -111,7 +111,14 @@ export default function Dashboard() {
     }
 
     async function newAttempt() {
-        console.log("new attempt")
+        if(Object.keys(props).length===0){
+            toast({
+                variant: "destructive",
+                title: "No constraints set",
+                description: "Please set constraints before starting a new attempt"
+            })
+            return;
+        }
         function generateSlug() {
             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let slug = '';
@@ -122,14 +129,16 @@ export default function Dashboard() {
             return slug;
         }
         const newSlug = generateSlug();
+        console.log("new slug: ",newSlug);
         const response = await fetch("/api/startingEngine", {
             method: "POST",
             body: JSON.stringify({
-                attemtptSlug: newSlug,
+                attemptSlug: newSlug,
                 constraints: props
             })
         })
         const data = await response.json();
+        console.log(data.status, data.response)
         if(data.status===400){
             toast({
                 variant: "destructive",
