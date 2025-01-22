@@ -9,8 +9,12 @@ export default class MathEngine {
         }
     }
 
-    get getTypes(){
+    getTypes(){
         return this.types;
+    }
+
+    toString(){
+        return `Math Engine for attempt ${this.attemptSlug}`
     }
 
 }

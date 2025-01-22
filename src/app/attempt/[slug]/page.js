@@ -44,6 +44,19 @@ export default function Attempt({ params }) {
 
         }
         checkUser();
+
+        async function deleteEngine(){
+            const response = await fetch(`/api/startingEngine?slug=${slug}`,{
+                method:"DELETE",
+            })
+            try{
+                const data = await response.json();
+                console.log(data);
+            }
+            catch(e){
+                console.log(e);
+            }
+        }
     }, [])
 
 
