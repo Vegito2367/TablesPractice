@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import LoadingButton from "@/customComponents/loadingButton";
 import { redirect } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
 
 export default function Attempt({ params }) {
 
@@ -25,6 +26,7 @@ export default function Attempt({ params }) {
     const [showDialog, setShowDialog] = useState(false);
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
+    const [questionTypes,setQuestionTypes] = useState(["type1","type2","type3"]);
     useEffect(() => {
         async function checkUser() {
             try {
@@ -70,7 +72,21 @@ export default function Attempt({ params }) {
         })
         try{
             const data = await response.json();
-            console.log(data);
+            if(data.status===200){
+
+                setQuestionTypes(data.payload);
+                toast({
+                    title: "Success",
+                    description: "Question types fetched"
+                })
+            }
+            else{
+                toast({
+                    variant: "destructive",
+                    title: "Error",
+                    description: data.response
+                })
+            }
         }
         catch(e){
             console.log(e);
@@ -104,6 +120,7 @@ export default function Attempt({ params }) {
                 <p>user logged in is : {data.response.user.email}</p>
                 <p>Slug: {slug}</p>
                 <p>user ID: {userID}</p>
+                <p>Question Types: {questionTypes}</p>
                 <Timer totalTime={10} callback={handleDialog} />
 
                 <AlertDialog open={showDialog} onOpenChange={handleDialog}>

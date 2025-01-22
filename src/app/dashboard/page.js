@@ -129,7 +129,7 @@ export default function Dashboard() {
             return slug;
         }
         const newSlug = generateSlug();
-        console.log("new slug: ",newSlug);
+
         const response = await fetch("/api/startingEngine", {
             method: "POST",
             body: JSON.stringify({
@@ -138,7 +138,6 @@ export default function Dashboard() {
             })
         })
         const data = await response.json();
-        console.log(data.status, data.response)
         if(data.status===400){
             toast({
                 variant: "destructive",
@@ -165,7 +164,7 @@ export default function Dashboard() {
                 break;
             }
         }
-        console.log(atleatstOneOp, operations)
+
         if (!atleatstOneOp) {
             toast({
                 variant: "destructive",

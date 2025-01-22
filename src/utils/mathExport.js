@@ -21,6 +21,7 @@ export async function createEngine(slug,cons){
     
 }
 export async function getMathEngine(attemptSlug) {
+    console.log(mathEngineInstances)
     try{
         if (!mathEngineInstances.has(attemptSlug)) {
             return {message: "Engine not found - Try reloading dashboard and try again", object: null};

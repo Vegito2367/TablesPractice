@@ -5,7 +5,10 @@ export default class MathEngine {
         this.questions=[];
         this.types=[]
         for (const questionType in this.constraints){
-            this.types.push(questionType);
+            if(this.constraints[questionType].include){
+                this.types.push(questionType);
+            }
+            
         }
     }
 

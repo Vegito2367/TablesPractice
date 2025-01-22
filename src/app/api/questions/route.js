@@ -10,8 +10,12 @@ export async function GET(request){
             const data = await getMathEngine(attemptSlug);
             const engine = await data.object;
 
-            console.log(engine)
-            return NextResponse.json({status:200, payload: engine.types});
+            if(engine){
+                return NextResponse.json({status:200, payload: engine.types});
+            }
+            else{
+                return NextResponse.json({status:400, response: "Engine not found - Try reloading dashboard and try again"});
+            }
             
         }
         
