@@ -26,7 +26,8 @@ export default function Attempt({ params }) {
     const [showDialog, setShowDialog] = useState(false);
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
-    const [questionTypes,setQuestionTypes] = useState(["type1","type2","type3"]);
+    const [questionTypes, setQuestionTypes] = useState(["type1", "type2", "type3"]);
+    const [currentQuestion, setCurrentQuestion] = useState({opA:2, opB:2, symbol:'+', answer: 4});
     useEffect(() => {
         async function checkUser() {
             try {
@@ -39,26 +40,52 @@ export default function Attempt({ params }) {
                 if (status === 200) {
                     setLoggedIn(true);
                 }
+                await retrieveQuestionType(tempslug);
             }
             catch (err) {
                 console.log(err)
             }
 
         }
-        checkUser();
 
-        async function deleteEngine(){
-            const response = await fetch(`/api/startingEngine?slug=${slug}`,{
-                method:"DELETE",
+
+        async function deleteEngine() {
+            const response = await fetch(`/api/startingEngine?slug=${slug}`, {
+                method: "DELETE",
             })
-            try{
+            try {
                 const data = await response.json();
                 console.log(data);
             }
-            catch(e){
+            catch (e) {
                 console.log(e);
             }
         }
+
+        async function retrieveQuestionType(slug) {
+
+            const response = await fetch(`/api/getQuestionType?slug=${slug}`, {
+                method: "GET",
+            })
+            try {
+                const data = await response.json();
+                if (data.status === 200) {
+
+                    setQuestionTypes(data.payload);
+                    console.log(data.payload)
+                }
+                else {
+                    console.log(data)
+                }
+            }
+            catch (e) {
+                console.log(e);
+            }
+
+        }
+
+        checkUser();
+        
     }, [])
 
 
@@ -66,32 +93,27 @@ export default function Attempt({ params }) {
         setShowDialog(!showDialog);
     }
 
-    async function testBackend(){
-        const response = await fetch(`/api/questions?slug=${slug}`,{
-            method:"GET",
+
+
+    async function getQuestion() {
+        const operation = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+        console.log(operation)
+        const response = await fetch(`/api/questions?slug=${slug}&operation=${operation}`, {
+            method: "GET",
         })
-        try{
+        try {
             const data = await response.json();
             if(data.status===200){
-
-                setQuestionTypes(data.payload);
-                toast({
-                    title: "Success",
-                    description: "Question types fetched"
-                })
+                console.log(data.payload);
+                setCurrentQuestion(data.payload);
             }
             else{
-                toast({
-                    variant: "destructive",
-                    title: "Error",
-                    description: data.response
-                })
+                console.log(data);
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e);
         }
-    
     }
 
     if (!loggedIn) {
@@ -109,10 +131,10 @@ export default function Attempt({ params }) {
                         <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={()=>{redirect("/dashboard")}}>Dashboard</Button>
+                        <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={testBackend}>Test Backend</Button>
+                        <Button className="" variant="secondary" onClick={getQuestion}>Test Backend</Button>
                     </div>
 
                 </div>
@@ -134,7 +156,7 @@ export default function Attempt({ params }) {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-                <QuestionBox />
+                <QuestionBox opA={currentQuestion.opA} opB={currentQuestion.opB} symbol={currentQuestion.symbol} />
 
 
 

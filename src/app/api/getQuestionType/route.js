@@ -4,19 +4,18 @@ import { NextResponse } from "next/server";
 export async function GET(request){
     const url = new URL(request.url);
     const attemptSlug = url.searchParams.get("slug");
-    const operation = url.searchParams.get("operation");
-    console.log("question GET Request",attemptSlug)
+    console.log("questionType GET Request",attemptSlug)
     try{
         if(attemptSlug){
             const data = await getMathEngine(attemptSlug);
             const engine = await data.object;
             if(engine){
-                const res = await engine.generateQuestion(operation);
-                if(res){
-                    return NextResponse.json({status:200, response: "Question found", payload: res.response});
+                const types = await engine.types;
+                if(types){
+                    return NextResponse.json({status:200, response: "Question types found", payload: types});
                 }
                 else{
-                    return NextResponse.json({status:404, response: "Question not found - Try again with a new attempt"});
+                    return NextResponse.json({status:404, response: "Question types not found - Try again with a new attempt"});
                 }
             }
             

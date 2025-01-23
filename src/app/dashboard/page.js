@@ -85,9 +85,13 @@ export default function Dashboard() {
         },
     ]
 
-
+    function handleDelay(){
+        setLoading(true);
+        setTimeout(()=>{
+            setLoading(false);
+        },2000)
+    }
     async function handleLogout() {
-        handleClick();
         if (loggedIn) {
             const { status, response } = await Logout();
             if (status === 200) {
@@ -111,6 +115,7 @@ export default function Dashboard() {
     }
 
     async function newAttempt() {
+        handleDelay();
         if(Object.keys(props).length===0){
             toast({
                 variant: "destructive",
@@ -148,7 +153,10 @@ export default function Dashboard() {
         }
 
         
-        router.push(`/attempt/${newSlug}`);
+        setTimeout(()=>{
+            router.push(`/attempt/${newSlug}`);
+        },2000)
+        
     }
     function resetCheckboxes() {
         setIncludeAddition(false);
@@ -298,7 +306,7 @@ export default function Dashboard() {
                         <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={newAttempt}>New Attempt</Button>
+                        <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt}/>
                     </div>
 
                 </div>

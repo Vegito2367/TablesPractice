@@ -21,7 +21,7 @@ export async function createEngine(slug,cons){
     
 }
 export async function getMathEngine(attemptSlug) {
-    console.log(mathEngineInstances)
+    
     try{
         if (!mathEngineInstances.has(attemptSlug)) {
             return {message: "Engine not found - Try reloading dashboard and try again", object: null};
@@ -31,6 +31,7 @@ export async function getMathEngine(attemptSlug) {
     }
     
     catch(e){
+        console.log(mathEngineInstances)
         console.log(e);
         return {status:500, response: "Status 500: check console"};
     }
