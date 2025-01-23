@@ -19,6 +19,7 @@ import {
 import LoadingButton from "@/customComponents/loadingButton";
 import { redirect } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
+import { Title } from "@radix-ui/react-dialog";
 
 export default function Attempt({ params }) {
 
@@ -30,6 +31,8 @@ export default function Attempt({ params }) {
     const [questionTypes, setQuestionTypes] = useState(["type1", "type2", "type3"]);
     const [currentQuestion, setCurrentQuestion] = useState({ opA: 2, opB: 2, symbol: '+', answer: 4 });
     const [timerActive, setTimerActive] = useState(false);
+    const [newQuestion,setNewQuestion] =  useState(false);
+    const [answer,setAnswer] = useState(0);
     useEffect(() => {
         async function checkUser() {
             try {
@@ -46,6 +49,7 @@ export default function Attempt({ params }) {
             }
             catch (err) {
                 console.log(err)
+                handleError("Exception in Checkuser")
             }
 
         }
@@ -61,6 +65,7 @@ export default function Attempt({ params }) {
             }
             catch (e) {
                 console.log(e);
+                handleError("Exception in DeletEngine")
             }
         }
 
@@ -77,11 +82,12 @@ export default function Attempt({ params }) {
 
                 }
                 else {
-                    console.log(data)
+                    handleError(data.response)
                 }
             }
             catch (e) {
                 console.log(e);
+                handleError("Exception in retrieveQuestion")
             }
 
         }
@@ -107,6 +113,28 @@ export default function Attempt({ params }) {
         startTimer();
     }
 
+    function handleError(message){
+        toast({
+            title: "Error occured!",
+            description: `${message} - Ending attempt`,
+        })
+
+        setTimeout(redirect("/dashboard"),1500)
+
+    }
+
+    
+
+    function handleKeyDown(e){
+        if(e.key === "Enter"){
+            e.preventDefault();
+            const a = Number(e.target.value)
+            if(!isNaN(a)){
+                setAnswer(a)
+            }   
+            console.log("Submitted ans", answer)
+        }
+    }
 
 
     async function getQuestion() {
@@ -123,10 +151,12 @@ export default function Attempt({ params }) {
             }
             else {
                 console.log(data);
+                handleError(data.response);
             }
         }
         catch (e) {
             console.log(e);
+            handleError("Exception in getQuestion");
         }
     }
 
@@ -171,11 +201,17 @@ export default function Attempt({ params }) {
                     </AlertDialogContent>
                 </AlertDialog>
 
-                {timerActive && (
+                {true && (
                     <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
                         <div className="flex flex-col justify-center items-center">
                             <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
-                            <Input type="number" className="w-20 h-7 border-2 border-gray-500 rounded-md" />
+                            <form>
+                                <input autoFocus={true} type="number" className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
+                                
+                                onKeyDown={handleKeyDown}
+                                />
+                            </form>
+                            
                         </div>
                     </div>
                 )}
