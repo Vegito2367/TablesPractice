@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-export default function Timer({ totalTime, callback }) {
+export default function Timer({ totalTime, completionCallback, preCallback }) {
 
     const [timeLeft, setTimeLeft] = useState(totalTime);
     const [active,setActive]=useState(false);
@@ -32,13 +32,16 @@ export default function Timer({ totalTime, callback }) {
     
 
     function timerFinished(){
-        if(callback){
-            callback();
+        if(completionCallback){
+            completionCallback();
         }
     }
 
     function startTimer(){
         setActive(true);
+        if(preCallback){
+            preCallback();
+        }
     }
 
     return (

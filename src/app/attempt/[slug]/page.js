@@ -4,6 +4,7 @@ import validateLogin from "../../middle";
 import Timer from "@/customComponents/timer";
 import { Button } from "@/components/ui/button";
 import QuestionBox from "@/customComponents/questionBox";
+import { Input } from "@/components/ui/input";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,7 +28,8 @@ export default function Attempt({ params }) {
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
     const [questionTypes, setQuestionTypes] = useState(["type1", "type2", "type3"]);
-    const [currentQuestion, setCurrentQuestion] = useState({opA:2, opB:2, symbol:'+', answer: 4});
+    const [currentQuestion, setCurrentQuestion] = useState({ opA: 2, opB: 2, symbol: '+', answer: 4 });
+    const [timerActive, setTimerActive] = useState(false);
     useEffect(() => {
         async function checkUser() {
             try {
@@ -72,7 +74,7 @@ export default function Attempt({ params }) {
                 if (data.status === 200) {
 
                     setQuestionTypes(data.payload);
-                    console.log(data.payload)
+
                 }
                 else {
                     console.log(data)
@@ -85,12 +87,24 @@ export default function Attempt({ params }) {
         }
 
         checkUser();
-        
+
     }, [])
 
 
     function handleDialog() {
         setShowDialog(!showDialog);
+    }
+
+    function startTimer() {
+        setTimerActive(!timerActive);
+    }
+
+    function handleTimerEnd() {
+        handleDialog();
+    }
+
+    function handleTimerStart() {
+        startTimer();
     }
 
 
@@ -103,11 +117,11 @@ export default function Attempt({ params }) {
         })
         try {
             const data = await response.json();
-            if(data.status===200){
+            if (data.status === 200) {
                 console.log(data.payload);
                 setCurrentQuestion(data.payload);
             }
-            else{
+            else {
                 console.log(data);
             }
         }
@@ -143,7 +157,7 @@ export default function Attempt({ params }) {
                 <p>Slug: {slug}</p>
                 <p>user ID: {userID}</p>
                 <p>Question Types: {questionTypes}</p>
-                <Timer totalTime={10} callback={handleDialog} />
+                <Timer totalTime={10} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
 
                 <AlertDialog open={showDialog} onOpenChange={handleDialog}>
                     <AlertDialogContent>
@@ -156,7 +170,17 @@ export default function Attempt({ params }) {
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>
-                <QuestionBox opA={currentQuestion.opA} opB={currentQuestion.opB} symbol={currentQuestion.symbol} />
+
+                {timerActive && (
+                    <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
+                        <div className="flex flex-col justify-center items-center">
+                            <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
+                            <Input type="number" className="w-20 h-7 border-2 border-gray-500 rounded-md" />
+                        </div>
+                    </div>
+                )}
+
+
 
 
 

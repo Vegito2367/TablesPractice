@@ -20,8 +20,10 @@ export default function Dashboard() {
     const router = useRouter();
     const [includeAddition, setIncludeAddition] = useState(false);
     const [includeSubtraction, setIncludeSubtraction] = useState(false);
-    const operations = [includeAddition, includeSubtraction]
-    const [props,setProps] = useState({});
+    const [includeMultiplication, setIncludeMultiplication] = useState(false);
+    const [includeDivision, setIncludeDivision] = useState(false);
+    const operations = [includeAddition, includeSubtraction, includeMultiplication, includeDivision];
+    const [props, setProps] = useState({});
     useEffect(() => {
         async function checkUser() {
             try {
@@ -85,11 +87,11 @@ export default function Dashboard() {
         },
     ]
 
-    function handleDelay(){
+    function handleDelay() {
         setLoading(true);
-        setTimeout(()=>{
+        setTimeout(() => {
             setLoading(false);
-        },2000)
+        }, 2000)
     }
     async function handleLogout() {
         if (loggedIn) {
@@ -116,7 +118,7 @@ export default function Dashboard() {
 
     async function newAttempt() {
         handleDelay();
-        if(Object.keys(props).length===0){
+        if (Object.keys(props).length === 0) {
             toast({
                 variant: "destructive",
                 title: "No constraints set",
@@ -143,7 +145,7 @@ export default function Dashboard() {
             })
         })
         const data = await response.json();
-        if(data.status===400){
+        if (data.status === 400) {
             toast({
                 variant: "destructive",
                 title: "Error Occured!",
@@ -152,15 +154,17 @@ export default function Dashboard() {
             return;
         }
 
-        
-        setTimeout(()=>{
+
+        setTimeout(() => {
             router.push(`/attempt/${newSlug}`);
-        },2000)
-        
+        }, 2000)
+
     }
     function resetCheckboxes() {
         setIncludeAddition(false);
         setIncludeSubtraction(false);
+        setIncludeMultiplication(false);
+        setIncludeDivision(false);
     }
 
     async function savePreferences(formData) {
@@ -187,6 +191,10 @@ export default function Dashboard() {
         const ulad = Number(formData.get("upperLimitAdd"));
         const llsub = Number(formData.get("lowerLimitSub"));
         const ulsub = Number(formData.get("upperLimitSub"));
+        const llmul = Number(formData.get("lowerLimitMul"));
+        const ulmul = Number(formData.get("upperLimitMul"));
+        const lldiv = Number(formData.get("lowerLimitDiv"));
+        const uldiv = Number(formData.get("upperLimitDiv"));
 
         if (includeAddition) {
             if (isNaN(llad) || isNaN(ulad)) {
@@ -224,7 +232,7 @@ export default function Dashboard() {
             if (isNaN(llsub) || isNaN(ulsub)) {
                 toast({
                     variant: "destructive",
-                    title: "Invalid input",
+                    title: "Invalid Subtraction input",
                     description: "Please enter a number"
                 })
                 resetCheckboxes();
@@ -234,7 +242,7 @@ export default function Dashboard() {
             if (llsub === 0 || ulsub === 0) {
                 toast({
                     variant: "destructive",
-                    title: "Invalid input",
+                    title: "Invalid Subtraction input",
                     description: "Please enter a number greater than 0"
                 })
                 resetCheckboxes();
@@ -254,6 +262,71 @@ export default function Dashboard() {
             }
         }
 
+        if (includeMultiplication) {
+            if (isNaN(llmul) || isNaN(ulmul)) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Mulitplication input",
+                    description: "Please enter a number"
+                })
+                resetCheckboxes();
+                return;
+            }
+
+            if (llmul === 0 || ulmul === 0) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Mulitplication input",
+                    description: "Please enter a number greater than 0"
+                })
+                resetCheckboxes();
+                return;
+            }
+
+            if (llmul >= ulmul) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Multiplication limits",
+                    description: "Upper limit must be greater than lower limit"
+                })
+                resetCheckboxes();
+                return;
+            }
+        }
+
+        if (includeDivision) {
+            if (isNaN(lldiv) || isNaN(uldiv)) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Division input",
+                    description: "Please enter a number"
+                })
+                resetCheckboxes();
+                return;
+            }
+
+            if (lldiv === 0 || uldiv === 0) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Division input",
+                    description: "Please enter a number greater than 0"
+                })
+                resetCheckboxes();
+                return;
+            }
+
+            if (lldiv >= uldiv) {
+                toast({
+                    variant: "destructive",
+                    title: "Invalid Division limits",
+                    description: "Upper limit must be greater than lower limit"
+                })
+                resetCheckboxes();
+                return;
+            }
+        }
+
+
 
 
         const additionObject = {
@@ -266,12 +339,28 @@ export default function Dashboard() {
             upperLimit: ulsub,
             include: includeSubtraction
         }
+        const multiplicationObject = {
+            lowerLimit: llmul,
+            upperLimit: ulmul,
+            include: includeMultiplication
+        }
+        const divisionObject = {
+            lowerLimit: lldiv,
+            upperLimit: uldiv,
+            include: includeDivision
+        }
         const mathProps = {
             "addition": {
                 ...additionObject
             },
             "subtraction": {
                 ...subtractionObject
+            },
+            "multiplication":{
+                ...multiplicationObject
+            },
+            "division": {
+                ...divisionObject
             }
         }
 
@@ -306,7 +395,7 @@ export default function Dashboard() {
                         <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
                     </div>
                     <div>
-                        <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt}/>
+                        <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt} />
                     </div>
 
                 </div>
@@ -334,14 +423,14 @@ export default function Dashboard() {
                                     <p className="text-center text-2xl">Addition</p>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Lower Limit:</p>
-                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} label="Lower Limit" />
+                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Upper Limit:</p>
-                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} label="Upper Limit" />
+                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} />
                                     </div>
                                     Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" label="Addition" />
+                                    <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" />
 
                                 </div>
 
@@ -350,14 +439,42 @@ export default function Dashboard() {
                                     <p className="text-center text-2xl">Subtraction</p>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Lower Limit:</p>
-                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} label="Lower Limit" />
+                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} />
                                     </div>
                                     <div className="flex flex-row gap-2 items-center">
                                         <p>Upper Limit:</p>
-                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} label="Upper Limit" />
+                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} />
                                     </div>
                                     Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" label="Subtraction" />
+                                    <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" />
+                                </div>
+                                <Separator decorative={true} className="opacity-35 m-3" />
+                                <div name="subtractionBox" className="flex flex-col items-center">
+                                    <p className="text-center text-2xl">Multiplication</p>
+                                    <div className="flex flex-row gap-2 items-center">
+                                        <p>Lower Limit:</p>
+                                        <Input name="lowerLimitMul" id="lowerLimitMul" type="number" defaultValue={2} />
+                                    </div>
+                                    <div className="flex flex-row gap-2 items-center">
+                                        <p>Upper Limit:</p>
+                                        <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} />
+                                    </div>
+                                    Include this attempt
+                                    <Checkbox onCheckedChange={setIncludeMultiplication} className="w-6 h-6 border-white border-2" name="multiplication" id="multiplication" />
+                                </div>
+                                <Separator decorative={true} className="opacity-35 m-3" />
+                                <div name="subtractionBox" className="flex flex-col items-center">
+                                    <p className="text-center text-2xl">Division</p>
+                                    <div className="flex flex-row gap-2 items-center">
+                                        <p>Lower Limit:</p>
+                                        <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} />
+                                    </div>
+                                    <div className="flex flex-row gap-2 items-center">
+                                        <p>Upper Limit:</p>
+                                        <Input name="upperLimitDiv" id="upperLimitDiv" type="number" defaultValue={50} />
+                                    </div>
+                                    Include this attempt
+                                    <Checkbox onCheckedChange={setIncludeDivision} className="w-6 h-6 border-white border-2" name="division" id="division" />
                                 </div>
                                 <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
                             </form>
