@@ -155,9 +155,9 @@ export default function Dashboard() {
         }
 
 
-        setTimeout(() => {
-            router.push(`/attempt/${newSlug}`);
-        }, 2000)
+        
+        router.push(`/attempt/${newSlug}`);
+        
 
     }
     function resetCheckboxes() {

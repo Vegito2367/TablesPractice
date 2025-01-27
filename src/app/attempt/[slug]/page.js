@@ -29,10 +29,11 @@ export default function Attempt({ params }) {
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
     const [questionTypes, setQuestionTypes] = useState(["type1", "type2", "type3"]);
-    const [currentQuestion, setCurrentQuestion] = useState({ opA: 2, opB: 2, symbol: '+', answer: 4 });
+    const [currentQuestion, setCurrentQuestion] = useState({ opA: 0, opB: 0, symbol: '+', answer: 0 });
     const [timerActive, setTimerActive] = useState(false);
-    const [newQuestion,setNewQuestion] =  useState(false);
-    const [answer,setAnswer] = useState(0);
+    const [newQuestion, setNewQuestion] = useState(false);
+    const [answer, setAnswer] = useState(0);
+    let exportQuestions = [];
     useEffect(() => {
         async function checkUser() {
             try {
@@ -45,11 +46,11 @@ export default function Attempt({ params }) {
                 if (status === 200) {
                     setLoggedIn(true);
                 }
-                await retrieveQuestionType(tempslug);
+                
             }
             catch (err) {
                 console.log(err)
-                handleError("Exception in Checkuser")
+                
             }
 
         }
@@ -65,37 +66,39 @@ export default function Attempt({ params }) {
             }
             catch (e) {
                 console.log(e);
-                handleError("Exception in DeletEngine")
+               
             }
         }
 
-        async function retrieveQuestionType(slug) {
-
-            const response = await fetch(`/api/getQuestionType?slug=${slug}`, {
-                method: "GET",
-            })
-            try {
-                const data = await response.json();
-                if (data.status === 200) {
-
-                    setQuestionTypes(data.payload);
-
-                }
-                else {
-                    handleError(data.response)
-                }
-            }
-            catch (e) {
-                console.log(e);
-                handleError("Exception in retrieveQuestion")
-            }
-
-        }
+        
 
         checkUser();
+        
 
     }, [])
 
+    async function retrieveQuestionType() {
+
+        const response = await fetch(`/api/getQuestionType?slug=${slug}`, {
+            method: "GET",
+        })
+        try {
+            const data = await response.json();
+            if (data.status === 200) {
+
+                setQuestionTypes(data.payload);
+
+            }
+            else {
+                handleError(data.response)
+            }
+        }
+        catch (e) {
+            console.log(e.message);
+            
+        }
+
+    }
 
     function handleDialog() {
         setShowDialog(!showDialog);
@@ -106,33 +109,47 @@ export default function Attempt({ params }) {
     }
 
     function handleTimerEnd() {
+        setTimerActive(false);
         handleDialog();
+        console.log(exportQuestions);
     }
 
-    function handleTimerStart() {
+    async function handleTimerStart() {
         startTimer();
+        await getQuestion();
     }
 
-    function handleError(message){
+    function handleError(message) {
         toast({
             title: "Error occured!",
             description: `${message} - Ending attempt`,
         })
 
-        setTimeout(redirect("/dashboard"),1500)
+        setTimeout(redirect("/dashboard"), 1500)
 
     }
 
-    
 
-    function handleKeyDown(e){
-        if(e.key === "Enter"){
+    async function handleKeyDown(e) {
+        if (e.key === "Enter") {
             e.preventDefault();
             const a = Number(e.target.value)
-            if(!isNaN(a)){
+            e.target.value = "";
+            if (!isNaN(a)) {
                 setAnswer(a)
-            }   
-            console.log("Submitted ans", answer)
+                exportQuestions.push(
+                    {
+                        opA: currentQuestion.opA,
+                        opB: currentQuestion.opB,
+                        symbol: currentQuestion.symbol,
+                        answer: currentQuestion.answer,
+                        userAnswer: a
+                    }
+                )
+                await getQuestion();
+                
+            }
+
         }
     }
 
@@ -151,12 +168,11 @@ export default function Attempt({ params }) {
             }
             else {
                 console.log(data);
-                handleError(data.response);
+                console.log(data.response);
             }
         }
         catch (e) {
-            console.log(e);
-            handleError("Exception in getQuestion");
+            console.log(e.message)
         }
     }
 
@@ -178,7 +194,7 @@ export default function Attempt({ params }) {
                         <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={getQuestion}>Test Backend</Button>
+                        <Button className="" variant="secondary" onClick={retrieveQuestionType}>Test Backend</Button>
                     </div>
 
                 </div>
@@ -201,17 +217,17 @@ export default function Attempt({ params }) {
                     </AlertDialogContent>
                 </AlertDialog>
 
-                {true && (
+                {timerActive && (
                     <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
                         <div className="flex flex-col justify-center items-center">
                             <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
                             <form>
-                                <input autoFocus={true} type="number" className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
-                                
-                                onKeyDown={handleKeyDown}
+                                <input onFocus={(e)=>{e.target.value=""}} autoFocus={true} type="number"
+                                    className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
+                                    onKeyDown={handleKeyDown}
                                 />
                             </form>
-                            
+
                         </div>
                     </div>
                 )}

@@ -9,6 +9,7 @@ export async function GET(request){
         if(attemptSlug){
             const data = await getMathEngine(attemptSlug);
             const engine = await data.object;
+            console.log(engine);
             if(engine){
                 const types = await engine.types;
                 if(types){
