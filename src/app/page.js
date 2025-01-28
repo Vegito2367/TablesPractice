@@ -1,9 +1,40 @@
 'use client'
 import Image from "next/image";
 import styles from "@/app/styles.module.css"
+import QuestionBlob from "@/customComponents/questionBlob";
 export default function Home() {
-  function handleClick(){
-    
+  const questions = [
+    {
+      opA: 2,
+      opB: 3,
+      symbol: "+",
+      userA: 5,
+      correctA: 5
+    },
+    {
+      opA: 5,
+      opB: 3,
+      symbol: "-",
+      userA: 2,
+      correctA: 2
+    },
+    {
+      opA: 2,
+      opB: 3,
+      symbol: "*",
+      userA: 6,
+      correctA: 6
+    },
+    {
+      opA: 10,
+      opB: 2,
+      symbol: "/",
+      userA: 5,
+      correctA: 5
+    }
+  ]
+  function handleClick() {
+
   }
   return (
     <>
@@ -19,13 +50,20 @@ export default function Home() {
             Login
           </a>
           <a href="/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-          Dashboard
+            Dashboard
           </a>
-          
+
+        </div>
+        <div className="flex flex-col w-full">
+          {
+            questions.map((question, index) => {
+              return <QuestionBlob key={index} opA={question.opA} opB={question.opB} symbol={question.symbol} userA={question.userA} correctA={question.correctA} />
+            })
+          }
         </div>
 
       </section>
-      
+
     </>
   );
 }

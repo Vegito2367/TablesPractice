@@ -1,3 +1,4 @@
+"use client"
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 export default function Timer({ totalTime, completionCallback, preCallback }) {
@@ -47,7 +48,7 @@ export default function Timer({ totalTime, completionCallback, preCallback }) {
     return (
         <div className="text-center p-5 font-sans border-white border-2 border-spacing-1">
             <h1 className="text-4xl text-white pb-3">Remaining Time: {timeLeft}</h1>
-            <Button onClick={startTimer} variant="secondary" className="px-5 py-2 text-lg rounded cursor-pointer">
+            <Button onClick={startTimer} disabled={!active} variant="secondary" className="px-5 py-2 text-lg rounded cursor-pointer">
                 Start Timer
             </Button>
         </div>

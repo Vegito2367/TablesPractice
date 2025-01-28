@@ -314,7 +314,7 @@ export default function Attempt({ params }) {
                     <p>Slug: {slug}</p>
                     <p>user ID: {userID}</p>
                     <p>Question Types: {questionTypes}</p>
-                    <Timer totalTime={120} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
+                    <Timer totalTime={60} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
 
                     <AlertDialog open={showDialog} onOpenChange={handleDialog}>
                         <AlertDialogContent>
