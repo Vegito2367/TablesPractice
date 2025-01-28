@@ -170,7 +170,7 @@ export default function Attempt({ params }) {
 
             const data = await response.json();
             if(data.status===200){
-                console.log(data.response);
+                console.log(data.response, question.id);
             }
             else{
                 throw new Error(data.response);

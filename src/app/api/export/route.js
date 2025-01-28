@@ -13,22 +13,22 @@ export async function POST(request) {
                 total_questions: attemptData.totalQuestions,
                 user_id: attemptData.userID,
             })
-        
-        console.log("Attempt",status, error)
-        if(status>=200 && status<300){
-            return NextResponse.json({status: 200, response: "Attempt created successfully"})
+
+        console.log("Attempt", status, error)
+        if (status >= 200 && status < 300) {
+            return NextResponse.json({ status: 200, response: "Attempt created successfully" })
         }
-        else{
-            return NextResponse.json({status: 400, response: "Error creating attempt"})
+        else {
+            return NextResponse.json({ status: 400, response: "Error creating attempt" })
         }
     }
-    else if(body.type === "question"){
+    else if (body.type === "question") {
         const questionData = body.payload
-        console.log("Question",status, error)
-        const { status, error } = await supabase
-            .from("Questions")
+
+        const { status, statusText, error } = await supabase
+            .from("Question")
             .insert({
-                id: questionData.id,
+                qID: `${questionData.attemptID}-${questionData.id}`,
                 operand: questionData.operand,
                 operand_a: questionData.operandA,
                 operand_b: questionData.operandB,
@@ -36,16 +36,16 @@ export async function POST(request) {
                 user_ans: questionData.userAns,
                 attempt_id: questionData.attemptID,
             })
-
-        if(status>=200 && status<300){
-            return NextResponse.json({status: 200, response: "Question created successfully"})
+        console.log("Question",questionData.id, status, statusText)
+        if (status >= 200 && status < 300) {
+            return NextResponse.json({ status: 200, response: "Question created successfully" })
         }
-        else{
-           return NextResponse.json({status: 400, response: error})
+        else {
+            return NextResponse.json({ status: 400, response: error })
         }
 
     }
-    else{
-        return NextResponse.json({status: 500, response: "Invalid request type"})
+    else {
+        return NextResponse.json({ status: 500, response: "Invalid request type" })
     }
 }
