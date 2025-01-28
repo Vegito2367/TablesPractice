@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -24,23 +25,74 @@ export default function Dashboard() {
     const [includeDivision, setIncludeDivision] = useState(false);
     const operations = [includeAddition, includeSubtraction, includeMultiplication, includeDivision];
     const [props, setProps] = useState({});
+    const [userID, setUserID] = useState("");
+    const [attempts, setAttempts] = useState([]);
+
     useEffect(() => {
         async function checkUser() {
             try {
                 const { status, response } = await validateLogin();
                 setData({ status: status, response: response });
+                setUserID(response.user.id)
                 if (status === 200) {
                     setLoggedIn(true);
                 }
+                fetchAttempts(response.user.id);
             }
             catch (err) {
                 console.log(err)
             }
 
         }
+
+        async function fetchAttempts(id) {
+            try{
+                const response = await fetch(`/api/retrieveAttempt?userID=${id}`,{
+                    method: "GET"
+                })
+                const data = await response.json();
+                if(data.status===200){
+                    data.payload.forEach(att=>{
+                        const date = att.created_at.substring(0,att.created_at.indexOf("T"));
+                        const numberOfQuestions = att.total_questions;
+                        const numberOfRights = att.num_correct;
+                        const numberOfWrongs = att.total_questions - att.num_correct;
+                        const newAttempt = {
+                            date: date,
+                            totalQuestions: numberOfQuestions,
+                            numCorrect: numberOfRights,
+                            numWrong: numberOfWrongs,
+                            slug: att.id
+                        }
+                        setAttempts(prev=>[...prev,newAttempt]);
+
+                    })
+                    attempts.sort((a,b)=>{
+                        return new Date(b.date) - new Date(a.date);
+                    })
+                }
+                else{
+                    toast({
+                        variant: "destructive",
+                        title: "Error fetching attempts",
+                        description: data.response
+                    })
+                }
+            }
+            catch(e){
+                console.log(e);
+            }
+            
+        }
+
+
         checkUser();
 
     }, []);
+
+    useEffect(() => {
+        console.log(attempts)
+    },[attempts])
 
 
     function debugFunction() {
@@ -49,43 +101,6 @@ export default function Dashboard() {
 
 
 
-    const attempts = [
-        {
-            id: 1,
-            numberOfQuestions: 10,
-            numberOfRights: 5,
-            numberOfWrongs: 5,
-            dateOfAttempt: "2021-09-01"
-        },
-        {
-            id: 2,
-            numberOfQuestions: 10,
-            numberOfRights: 6,
-            numberOfWrongs: 4,
-            dateOfAttempt: "2021-09-02"
-        },
-        {
-            id: 3,
-            numberOfQuestions: 10,
-            numberOfRights: 7,
-            numberOfWrongs: 3,
-            dateOfAttempt: "2021-09-03"
-        },
-        {
-            id: 4,
-            numberOfQuestions: 10,
-            numberOfRights: 3,
-            numberOfWrongs: 7,
-            dateOfAttempt: "2021-09-04"
-        },
-        {
-            id: 5,
-            numberOfQuestions: 10,
-            numberOfRights: 4,
-            numberOfWrongs: 6,
-            dateOfAttempt: "2021-09-05"
-        },
-    ]
 
     function handleDelay() {
         setLoading(true);
@@ -407,11 +422,13 @@ export default function Dashboard() {
                     <Button className="mt-5" variant="secondary" onClick={debugFunction}>Click me</Button>
                     <div className="flex flex-row">
                         <div name="attempts" className="w-1/2">
-                            {attempts.map((attempt) => {
-                                return <Attempt key={attempt.id} numberOfQuestions={attempt.numberOfQuestions}
-                                    numberOfRights={attempt.numberOfRights}
-                                    numberOfWrongs={attempt.numberOfWrongs}
-                                    date={attempt.dateOfAttempt}
+                        {userID && attempts.length===0 && <Skeleton className="w-1/2 h-1/2" />}
+                            {attempts.map((attempt,index) => {
+                                return <Attempt key={index} numberOfQuestions={attempt.totalQuestions}
+                                    numberOfRights={attempt.numCorrect}
+                                    numberOfWrongs={attempt.numWrong}
+                                    date={attempt.date}
+                                    slug={attempt.slug}
                                 />
                             })}
                         </div>

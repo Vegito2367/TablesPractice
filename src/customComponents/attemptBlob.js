@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress";
 
-export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWrongs, date }) {
+export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWrongs, date, slug }) {
 
     const percentageCorrect=(numberOfRights/numberOfQuestions)*100;
     const percentageWrong=(numberOfWrongs/numberOfQuestions)*100;
@@ -14,6 +14,7 @@ export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWro
         <>
             <div className="flex flex-col bg-gray-800 p-5 m-5 hover:bg-gray-900 mb-0 rounded-lg">
                 <p className="text-2xl">Date of attempt: {date}</p>
+                <p className="text-xl"> Attempt ID: {slug}</p>
                 <p className="text-md text-white text-left">Total Questions: {numberOfQuestions}</p>
                 <div className="w-full h-4 bg-slate-400 flex flex-row rounded-md">
                     <TooltipProvider>

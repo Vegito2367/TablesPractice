@@ -12,6 +12,7 @@ export async function POST(request) {
                 created_at: attemptData.createdAt,
                 total_questions: attemptData.totalQuestions,
                 user_id: attemptData.userID,
+                num_correct: attemptData.numCorrect,
             })
 
         console.log("Attempt", status, error)
