@@ -9,8 +9,7 @@ export async function GET(request) {
         .from("Attempts")
         .select("id, created_at, total_questions, num_correct")
         .eq("user_id",userID)
-
-        console.log("Attempts", statusText, data)
+        
         if(status===200){
             return NextResponse.json({status:200, payload: data});
         }

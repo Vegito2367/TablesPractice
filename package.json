@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && next start",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "rebuild":"rm -rf .next && npm run build"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.4",

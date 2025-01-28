@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/server";
+import { NextResponse } from "next/server";
 //POSSIBLE EDGE CASE: REPEATED ATTEMPT IDs for MULTIPLE USERS.
 export async function GET(request){
     const url = new URL(request.url);
