@@ -15,12 +15,7 @@ export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWro
     return (
         <>
             <div className="flex flex-col bg-gray-800 p-5 m-5 hover:bg-gray-900 mb-0 rounded-lg" onClick={() => {
-                router.push(
-                    {
-                        pathname: `/dashboard/${slug}`,
-                        query: { numQ: numberOfQuestions, numR: numberOfRights, numW: numberOfWrongs, date: date }
-                    }
-                )
+                router.push(`/dashboard/${slug}?numQ=${numberOfQuestions}&numR=${numberOfRights}&numW=${numberOfWrongs}&date=${date}`)
             }}>
                 <p className="text-2xl">Date of attempt: {date}</p>
                 <p className="text-xl"> Attempt ID: {slug}</p>

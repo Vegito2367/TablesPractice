@@ -91,9 +91,6 @@ export default function Dashboard() {
 
     }, []);
 
-    useEffect(() => {
-        console.log(attempts)
-    },[attempts])
 
 
     function debugFunction() {

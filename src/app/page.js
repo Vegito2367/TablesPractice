@@ -15,7 +15,7 @@ export default function Home() {
       opA: 5,
       opB: 3,
       symbol: "-",
-      userA: 2,
+      userA: 1,
       correctA: 2
     },
     {
@@ -29,7 +29,7 @@ export default function Home() {
       opA: 10,
       opB: 2,
       symbol: "/",
-      userA: 5,
+      userA: 7,
       correctA: 5
     }
   ]
