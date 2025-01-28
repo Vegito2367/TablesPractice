@@ -21,7 +21,6 @@ export async function createEngine(slug,cons){
     
 }
 export async function getMathEngine(attemptSlug) {
-    console.log(mathEngineInstances)
     try{
         if (!mathEngineInstances.has(attemptSlug)) {
 
@@ -41,5 +40,5 @@ export async function getMathEngine(attemptSlug) {
 
 export async function deleteMathEngine(attemptSlug) {
     mathEngineInstances.delete(attemptSlug);
-    return "Engine deleted successfully";
+    return {status:200, response: "Engine deleted successfully"};
 }

@@ -2,13 +2,12 @@
 import styles from "@/app/styles.module.css"
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { redirect } from "next/navigation";
 import { attemptSignup } from "@/utils/actions";
 import { useState } from "react";
 
-
-import { useRef } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 export default function SignUp() {
     const { toast } = useToast();
     const [loading,setLoading]=useState(false);

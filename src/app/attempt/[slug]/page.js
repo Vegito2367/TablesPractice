@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import validateLogin from "../../middle";
 import Timer from "@/customComponents/timer";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,9 @@ import LoadingButton from "@/customComponents/loadingButton";
 import { redirect } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Title } from "@radix-ui/react-dialog";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Attempt({ params }) {
 
@@ -31,9 +34,11 @@ export default function Attempt({ params }) {
     const [questionTypes, setQuestionTypes] = useState(["type1", "type2", "type3"]);
     const [currentQuestion, setCurrentQuestion] = useState({ opA: 0, opB: 0, symbol: '+', answer: 0 });
     const [timerActive, setTimerActive] = useState(false);
-    const [newQuestion, setNewQuestion] = useState(false);
-    const [answer, setAnswer] = useState(0);
-    let exportQuestions = [];
+    const [questionExportList, setquestionExportList] = useState([]);
+    const [attempt,setCompleteAttempt] = useState(false);
+    const [correctAnswers, setCorrectAnswers] = useState(0);
+    const router= useRouter();
+   
     useEffect(() => {
         async function checkUser() {
             try {
@@ -46,11 +51,15 @@ export default function Attempt({ params }) {
                 if (status === 200) {
                     setLoggedIn(true);
                 }
-                
+                else{
+                    throw new Error(`User not logged in - ${response}`);
+                }
+                retrieveQuestionType(tempslug);
+
             }
             catch (err) {
                 console.log(err)
-                
+
             }
 
         }
@@ -66,20 +75,117 @@ export default function Attempt({ params }) {
             }
             catch (e) {
                 console.log(e);
-               
+
             }
         }
-
         
+
 
         checkUser();
-        
+       
+
 
     }, [])
 
-    async function retrieveQuestionType() {
+    useEffect(() => {
+        console.log(questionExportList);
+    }, [questionExportList])
 
-        const response = await fetch(`/api/getQuestionType?slug=${slug}`, {
+    useEffect(() => {
+        /*
+        Step 1: consolidate export info:
+        Step 2: Create new attempt in database(slug,timecreated,totalQs, userID)
+        Step 3: Get attempt ID and populate questions(id,symbol,opA,opB,answer,userAnswer,attemptID)
+        all http requests should be {status, response and optionally payload}
+        */ 
+        if(attempt){
+            exportAttempt();
+        }
+    },[attempt])
+
+    async function exportAttempt(){
+        const newAttempt ={
+            id: slug,
+            createdAt: new Date().toISOString(),
+            totalQuestions: questionExportList.length,
+            userID: userID,
+            numCorrect: correctAnswers,
+        }
+        const exportPacket={
+            type: "attempt",
+            payload: newAttempt,
+        }
+        const res = await fetch("/api/export",{
+            method: "POST",
+            body: JSON.stringify(exportPacket),
+
+        })
+        try{
+            const data = await res.json();
+            console.log(data.status, data.response);
+
+        }
+        catch(e){
+            console.log(e);
+        }
+        let questionCallbacks=[];
+        questionExportList.forEach((question,index)=>{
+            const newQuestion = {
+                operand: question.symbol,
+                operandA: question.opA,
+                operandB: question.opB,
+                correctAns: question.answer,
+                userAns: question.userAnswer,
+                attemptID: slug,
+                id: index+1,
+            }
+
+            questionCallbacks.push(exportQuestions(newQuestion));
+            
+        })
+
+        Promise.all(questionCallbacks).then((results)=>{
+            results.forEach((res)=>{console.log(res)});
+            toast({
+                title: "Attempt Data Saved",
+                description: "Redirecting back to Dashboard",
+            })
+            setTimeout(router.push("/dashboard"), 2000);
+        }).catch((e)=>{
+            console.log(e);
+        })
+
+    }
+
+    async function exportQuestions(question){
+        const expPacket={
+            type: "question",
+            payload: question,
+        }
+        try{
+            const response = await fetch("/api/export", {
+                method: "POST",
+                body: JSON.stringify(expPacket),
+            })
+
+            const data = await response.json();
+            if(data.status===200){
+                console.log(data.response);
+            }
+            else{
+                throw new Error(data.response);
+            }
+        }
+        catch(e){
+            console.log(e.message)
+        }
+        
+
+        
+    }
+    async function retrieveQuestionType(localSlug) {
+
+        const response = await fetch(`/api/getQuestionType?slug=${localSlug}`, {
             method: "GET",
         })
         try {
@@ -90,12 +196,12 @@ export default function Attempt({ params }) {
 
             }
             else {
-                handleError(data.response)
+                throw new Error(data.response)
             }
         }
         catch (e) {
             console.log(e.message);
-            
+
         }
 
     }
@@ -111,7 +217,7 @@ export default function Attempt({ params }) {
     function handleTimerEnd() {
         setTimerActive(false);
         handleDialog();
-        console.log(exportQuestions);
+        setTimeout(()=>{setCompleteAttempt(true)}, 2000);
     }
 
     async function handleTimerStart() {
@@ -136,18 +242,22 @@ export default function Attempt({ params }) {
             const a = Number(e.target.value)
             e.target.value = "";
             if (!isNaN(a)) {
-                setAnswer(a)
-                exportQuestions.push(
-                    {
-                        opA: currentQuestion.opA,
-                        opB: currentQuestion.opB,
-                        symbol: currentQuestion.symbol,
-                        answer: currentQuestion.answer,
-                        userAnswer: a
-                    }
-                )
-                await getQuestion();
+                const correctOrNot = currentQuestion.answer === a;
+                if(correctOrNot){
+                    setCorrectAnswers(correctAnswers => correctAnswers+1);
+                }
+                const expQuestion={
+                    opA: currentQuestion.opA,
+                    opB: currentQuestion.opB,
+                    symbol: currentQuestion.symbol,
+                    answer: currentQuestion.answer,
+                    userAnswer: a,
+                    correctAns: correctOrNot,
+                }
                 
+                setquestionExportList(questionExportList => [...questionExportList, expQuestion]);
+                await getQuestion();
+
             }
 
         }
@@ -156,19 +266,18 @@ export default function Attempt({ params }) {
 
     async function getQuestion() {
         const operation = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-        console.log(operation)
+
         const response = await fetch(`/api/questions?slug=${slug}&operation=${operation}`, {
             method: "GET",
         })
         try {
             const data = await response.json();
             if (data.status === 200) {
-                console.log(data.payload);
                 setCurrentQuestion(data.payload);
             }
             else {
                 console.log(data);
-                console.log(data.response);
+                throw new Error(data.response);
             }
         }
         catch (e) {
@@ -194,7 +303,7 @@ export default function Attempt({ params }) {
                         <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={retrieveQuestionType}>Test Backend</Button>
+                        <Button className="" variant="secondary">Test Backend</Button>
                     </div>
 
                 </div>
@@ -222,7 +331,7 @@ export default function Attempt({ params }) {
                         <div className="flex flex-col justify-center items-center">
                             <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
                             <form>
-                                <input onFocus={(e)=>{e.target.value=""}} autoFocus={true} type="number"
+                                <input onFocus={(e) => { e.target.value = "" }} autoFocus={true} type="number"
                                     className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
                                     onKeyDown={handleKeyDown}
                                 />

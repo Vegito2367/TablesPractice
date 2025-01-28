@@ -32,9 +32,9 @@ export async function DELETE(request){
         if(!attemptSlug){
             return Response.json({status: 400, response: "Invalid slug"});
         }
-        const message = await deleteEngine(attemptSlug);
-        if(message === "Engine deleted successfully"){
-            return Response.json({status: 200, response: message});
+        const data = await deleteEngine(attemptSlug);
+        if(data.status === 200){
+            return Response.json({status: 200, response: data.message});
         }
     }
     catch(e){

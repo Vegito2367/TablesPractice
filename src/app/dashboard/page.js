@@ -102,7 +102,7 @@ export default function Dashboard() {
                     description: "You will be redirected to the home page",
                 })
                 setTimeout(() => {
-                    redirect("/")
+                    router.push("/")
                 }, 2000)
             }
             else {
@@ -377,7 +377,7 @@ export default function Dashboard() {
         return (
             <>
                 <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
-                    <Button className="absolute top-5 left-0" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
+                    <Button className="absolute top-5 left-0" variant="secondary" onClick={() => { router.push("/") }}>Home</Button>
                     <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
                     <p> You are not logged in</p>
                 </section>
@@ -392,7 +392,7 @@ export default function Dashboard() {
                         <LoadingButton loading={loading} classes="" variant="secondary" title="Logout" callback={handleLogout} />
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
+                        <Button className="" variant="secondary" onClick={() => { router.push("/") }}>Home</Button>
                     </div>
                     <div>
                         <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt} />

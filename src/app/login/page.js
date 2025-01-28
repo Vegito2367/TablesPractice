@@ -6,10 +6,12 @@ import { redirect } from "next/navigation";
 import { attemptLogin } from "@/utils/actions";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   
   const { toast } = useToast();
+  
   const [loading,setLoading]=useState(false);
   async function PreLogin(formData) {
     setLoading(true);
@@ -59,7 +61,7 @@ export default function Login() {
       })
       setTimeout(()=>{
         setLoading(false)
-        redirect("/dashboard")
+router.push("/dashboard")
       },2000)
       
     }
@@ -82,7 +84,7 @@ export default function Login() {
             {loading?"Please Wait":"Submit"}
           </Button>
         </form>
-        <Button className="text-white" variant="link" onClick={() => { redirect("signup") }}>Sign Up</Button>
+        <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button>
       </section>
     </>
   );
