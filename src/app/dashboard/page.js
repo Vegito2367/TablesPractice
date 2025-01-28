@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "motion/react";
 export default function Dashboard() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -400,7 +401,7 @@ export default function Dashboard() {
         )
     }
     return (
-        <>
+        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{duration: 0.75}}>
             <section className="w-screen bg-gray-950">
                 <div className="flex flex-row justify-center gap-5 w-screen">
                     <div>
@@ -501,7 +502,7 @@ export default function Dashboard() {
                 </div>
 
             </section>
-        </>
+        </motion.div>
     )
 
 }

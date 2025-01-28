@@ -21,6 +21,7 @@ import { redirect } from "next/navigation";
 import { toast } from "@/hooks/use-toast";
 import { Title } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 
 
@@ -35,10 +36,10 @@ export default function Attempt({ params }) {
     const [currentQuestion, setCurrentQuestion] = useState({ opA: 0, opB: 0, symbol: '+', answer: 0 });
     const [timerActive, setTimerActive] = useState(false);
     const [questionExportList, setquestionExportList] = useState([]);
-    const [attempt,setCompleteAttempt] = useState(false);
+    const [attempt, setCompleteAttempt] = useState(false);
     const [correctAnswers, setCorrectAnswers] = useState(0);
-    const router= useRouter();
-   
+    const router = useRouter();
+
     useEffect(() => {
         async function checkUser() {
             try {
@@ -51,7 +52,7 @@ export default function Attempt({ params }) {
                 if (status === 200) {
                     setLoggedIn(true);
                 }
-                else{
+                else {
                     throw new Error(`User not logged in - ${response}`);
                 }
                 retrieveQuestionType(tempslug);
@@ -78,11 +79,11 @@ export default function Attempt({ params }) {
 
             }
         }
-        
+
 
 
         checkUser();
-       
+
 
 
     }, [])
@@ -97,39 +98,39 @@ export default function Attempt({ params }) {
         Step 2: Create new attempt in database(slug,timecreated,totalQs, userID)
         Step 3: Get attempt ID and populate questions(id,symbol,opA,opB,answer,userAnswer,attemptID)
         all http requests should be {status, response and optionally payload}
-        */ 
-        if(attempt){
+        */
+        if (attempt) {
             exportAttempt();
         }
-    },[attempt])
+    }, [attempt])
 
-    async function exportAttempt(){
-        const newAttempt ={
+    async function exportAttempt() {
+        const newAttempt = {
             id: slug,
             createdAt: new Date().toISOString(),
             totalQuestions: questionExportList.length,
             userID: userID,
             numCorrect: correctAnswers,
         }
-        const exportPacket={
+        const exportPacket = {
             type: "attempt",
             payload: newAttempt,
         }
-        const res = await fetch("/api/export",{
+        const res = await fetch("/api/export", {
             method: "POST",
             body: JSON.stringify(exportPacket),
 
         })
-        try{
+        try {
             const data = await res.json();
             console.log(data.status, data.response);
 
         }
-        catch(e){
+        catch (e) {
             console.log(e);
         }
-        let questionCallbacks=[];
-        questionExportList.forEach((question,index)=>{
+        let questionCallbacks = [];
+        questionExportList.forEach((question, index) => {
             const newQuestion = {
                 operand: question.symbol,
                 operandA: question.opA,
@@ -137,51 +138,51 @@ export default function Attempt({ params }) {
                 correctAns: question.answer,
                 userAns: question.userAnswer,
                 attemptID: slug,
-                id: index+1,
+                id: index + 1,
             }
 
             questionCallbacks.push(exportQuestions(newQuestion));
-            
+
         })
 
-        Promise.all(questionCallbacks).then((results)=>{
-            results.forEach((res)=>{console.log(res)});
+        Promise.all(questionCallbacks).then((results) => {
+            results.forEach((res) => { console.log(res) });
             toast({
                 title: "Attempt Data Saved",
                 description: "Redirecting back to Dashboard",
             })
             setTimeout(router.push("/dashboard"), 2000);
-        }).catch((e)=>{
+        }).catch((e) => {
             console.log(e);
         })
 
     }
 
-    async function exportQuestions(question){
-        const expPacket={
+    async function exportQuestions(question) {
+        const expPacket = {
             type: "question",
             payload: question,
         }
-        try{
+        try {
             const response = await fetch("/api/export", {
                 method: "POST",
                 body: JSON.stringify(expPacket),
             })
 
             const data = await response.json();
-            if(data.status===200){
+            if (data.status === 200) {
                 console.log(data.response, question.id);
             }
-            else{
+            else {
                 throw new Error(data.response);
             }
         }
-        catch(e){
+        catch (e) {
             console.log(e.message)
         }
-        
 
-        
+
+
     }
     async function retrieveQuestionType(localSlug) {
 
@@ -217,7 +218,7 @@ export default function Attempt({ params }) {
     function handleTimerEnd() {
         setTimerActive(false);
         handleDialog();
-        setTimeout(()=>{setCompleteAttempt(true)}, 2000);
+        setTimeout(() => { setCompleteAttempt(true) }, 2000);
     }
 
     async function handleTimerStart() {
@@ -243,10 +244,10 @@ export default function Attempt({ params }) {
             e.target.value = "";
             if (!isNaN(a)) {
                 const correctOrNot = currentQuestion.answer === a;
-                if(correctOrNot){
-                    setCorrectAnswers(correctAnswers => correctAnswers+1);
+                if (correctOrNot) {
+                    setCorrectAnswers(correctAnswers => correctAnswers + 1);
                 }
-                const expQuestion={
+                const expQuestion = {
                     opA: currentQuestion.opA,
                     opB: currentQuestion.opB,
                     symbol: currentQuestion.symbol,
@@ -254,7 +255,7 @@ export default function Attempt({ params }) {
                     userAnswer: a,
                     correctAns: correctOrNot,
                 }
-                
+
                 setquestionExportList(questionExportList => [...questionExportList, expQuestion]);
                 await getQuestion();
 
@@ -294,58 +295,61 @@ export default function Attempt({ params }) {
     }
     else {
         return (
-            <section className="h-screen w-screen bg-gray-950 text-white">
-                <div className="flex flex-row justify-center gap-5 w-screen">
-                    <div>
-                        <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
-                    </div>
-                    <div>
-                        <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
-                    </div>
-                    <div>
-                        <Button className="" variant="secondary">Test Backend</Button>
-                    </div>
-
-                </div>
-                <h1>Attempt page</h1>
-                <p>user logged in is : {data.response.user.email}</p>
-                <p>Slug: {slug}</p>
-                <p>user ID: {userID}</p>
-                <p>Question Types: {questionTypes}</p>
-                <Timer totalTime={10} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
-
-                <AlertDialog open={showDialog} onOpenChange={handleDialog}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Time has elapsed.</AlertDialogTitle>
-                            <AlertDialogDescription>Good job on the attempt!</AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Close</AlertDialogCancel>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-
-                {timerActive && (
-                    <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
-                        <div className="flex flex-col justify-center items-center">
-                            <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
-                            <form>
-                                <input onFocus={(e) => { e.target.value = "" }} autoFocus={true} type="number"
-                                    className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
-                                    onKeyDown={handleKeyDown}
-                                />
-                            </form>
-
+            <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
+                <section className="h-screen w-screen bg-gray-950 text-white">
+                    <div className="flex flex-row justify-center gap-5 w-screen">
+                        <div>
+                            <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
                         </div>
+                        <div>
+                            <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
+                        </div>
+                        <div>
+                            <Button className="" variant="secondary">Test Backend</Button>
+                        </div>
+
                     </div>
-                )}
+                    <h1>Attempt page</h1>
+                    <p>user logged in is : {data.response.user.email}</p>
+                    <p>Slug: {slug}</p>
+                    <p>user ID: {userID}</p>
+                    <p>Question Types: {questionTypes}</p>
+                    <Timer totalTime={120} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
+
+                    <AlertDialog open={showDialog} onOpenChange={handleDialog}>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Time has elapsed.</AlertDialogTitle>
+                                <AlertDialogDescription>Good job on the attempt!</AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Close</AlertDialogCancel>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+
+                    {timerActive && (
+                        <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
+                            <div className="flex flex-col justify-center items-center">
+                                <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
+                                <form>
+                                    <input onFocus={(e) => { e.target.value = "" }} autoFocus={true} type="number"
+                                        className="w-20 h-7 border-2 border-gray-500 rounded-md bg-gray-900"
+                                        onKeyDown={handleKeyDown}
+                                    />
+                                </form>
+
+                            </div>
+                        </div>
+                    )}
 
 
 
 
 
-            </section>
+                </section>
+            </motion.div>
+
         )
     }
 

@@ -5,14 +5,15 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Progress } from "@/components/ui/progress";
+import { useRouter } from "next/navigation";
 
 export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWrongs, date, slug }) {
-
+    const router = useRouter();
     const percentageCorrect=(numberOfRights/numberOfQuestions)*100;
     const percentageWrong=(numberOfWrongs/numberOfQuestions)*100;
     return (
         <>
-            <div className="flex flex-col bg-gray-800 p-5 m-5 hover:bg-gray-900 mb-0 rounded-lg">
+            <div className="flex flex-col bg-gray-800 p-5 m-5 hover:bg-gray-900 mb-0 rounded-lg" onClick={()=>{router.push(`/dashboard/${slug}`)}}>
                 <p className="text-2xl">Date of attempt: {date}</p>
                 <p className="text-xl"> Attempt ID: {slug}</p>
                 <p className="text-md text-white text-left">Total Questions: {numberOfQuestions}</p>

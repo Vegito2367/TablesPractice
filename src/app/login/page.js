@@ -7,6 +7,7 @@ import { attemptLogin } from "@/utils/actions";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { motion } from "motion/react";
 
 export default function Login() {
   
@@ -68,7 +69,7 @@ router.push("/dashboard")
   }
 
   return (
-    <>
+    <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{duration: 1}}>
       <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center">
         <Button className="mb-4" variant="secondary" onClick={() => { redirect("/") }}>Go to Home</Button>
         <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
@@ -86,6 +87,6 @@ router.push("/dashboard")
         </form>
         <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button>
       </section>
-    </>
+    </motion.div>
   );
 }
