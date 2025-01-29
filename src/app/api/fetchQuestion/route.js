@@ -18,7 +18,7 @@ export async function GET(request){
             .from("Question")
             .select("*")
             .eq("attempt_id",attemptID)
-            console.log("Question",statusText,data)
+
             if(status>=200 && status<300){
                 return NextResponse.json({status:200, payload: data, response: "Questions found"});
             }

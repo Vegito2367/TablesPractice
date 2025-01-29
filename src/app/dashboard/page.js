@@ -47,14 +47,14 @@ export default function Dashboard() {
         }
 
         async function fetchAttempts(id) {
-            try{
-                const response = await fetch(`/api/retrieveAttempt?userID=${id}`,{
+            try {
+                const response = await fetch(`/api/retrieveAttempt?userID=${id}`, {
                     method: "GET"
                 })
                 const data = await response.json();
-                if(data.status===200){
-                    data.payload.forEach(att=>{
-                        const date = att.created_at.substring(0,att.created_at.indexOf("T"));
+                if (data.status === 200) {
+                    data.payload.forEach(att => {
+                        const date = att.created_at.substring(0, att.created_at.indexOf("T"));
                         const numberOfQuestions = att.total_questions;
                         const numberOfRights = att.num_correct;
                         const numberOfWrongs = att.total_questions - att.num_correct;
@@ -65,14 +65,14 @@ export default function Dashboard() {
                             numWrong: numberOfWrongs,
                             slug: att.id
                         }
-                        setAttempts(prev=>[...prev,newAttempt]);
+                        setAttempts(prev => [...prev, newAttempt]);
 
                     })
-                    attempts.sort((a,b)=>{
+                    attempts.sort((a, b) => {
                         return new Date(b.date) - new Date(a.date);
                     })
                 }
-                else{
+                else {
                     toast({
                         variant: "destructive",
                         title: "Error fetching attempts",
@@ -80,10 +80,10 @@ export default function Dashboard() {
                     })
                 }
             }
-            catch(e){
+            catch (e) {
                 console.log(e);
             }
-            
+
         }
 
 
@@ -168,9 +168,9 @@ export default function Dashboard() {
         }
 
 
-        
+
         router.push(`/attempt/${newSlug}`);
-        
+
 
     }
     function resetCheckboxes() {
@@ -369,7 +369,7 @@ export default function Dashboard() {
             "subtraction": {
                 ...subtractionObject
             },
-            "multiplication":{
+            "multiplication": {
                 ...multiplicationObject
             },
             "division": {
@@ -398,7 +398,7 @@ export default function Dashboard() {
         )
     }
     return (
-        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{duration: 0.75}}>
+        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
             <section className="w-screen bg-gray-950">
                 <div className="flex flex-row justify-center gap-5 w-screen">
                     <div>
@@ -417,11 +417,10 @@ export default function Dashboard() {
                     <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
                     <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
                     {data.response && data.response.user && <p>{data.response.user.email}</p>}
-                    <Button className="mt-5" variant="secondary" onClick={debugFunction}>Click me</Button>
-                    <div className="flex flex-row">
-                        <div name="attempts" className="w-1/2">
-                        {userID && attempts.length===0 && <Skeleton className="w-1/2 h-1/2" />}
-                            {attempts.map((attempt,index) => {
+                    <div className="flex flex-row border-2 border-white rounded-lg m-2">
+                        <div name="attempts" className="w-1/2 max-h-screen overflow-y-auto">
+                            {userID && attempts.length === 0 && <Skeleton className="w-1/2 h-1/2" />}
+                            {attempts.map((attempt, index) => {
                                 return <Attempt key={index} numberOfQuestions={attempt.totalQuestions}
                                     numberOfRights={attempt.numCorrect}
                                     numberOfWrongs={attempt.numWrong}
@@ -430,67 +429,72 @@ export default function Dashboard() {
                                 />
                             })}
                         </div>
-                        <div name="constraints" className="text-white w-1/2 items-center flex flex-col border-2 border-white rounded-md">
+                        <div name="constraints" className="text-white w-1/2 items-center flex flex-col rounded-md">
                             <p className="text-3xl mt-3">Constraints</p>
                             <Separator decorative={true} className="opacity-35 m-3" />
-                            <form className="w-2/6 flex flex-col items-center gap-4">
-                                <div name="additionBox" className="flex flex-col items-center">
-                                    <p className="text-center text-2xl">Addition</p>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Lower Limit:</p>
-                                        <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} />
-                                    </div>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Upper Limit:</p>
-                                        <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} />
-                                    </div>
-                                    Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" />
+                            <form className="flex flex-col items-center gap-4">
+                                <div className="flex flex-row py-7">
+                                    <div name="additionBox" className="flex flex-col items-center w-1/2 px-7">
+                                        <p className="text-center text-2xl">Addition</p>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Lower Limit:</p>
+                                            <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} />
+                                        </div>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Upper Limit:</p>
+                                            <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} />
+                                        </div>
+                                        Include this attempt
+                                        <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" />
 
+                                    </div>
+
+                                    
+                                    <div name="subtractionBox" className="flex flex-col items-center w-1/2 px-7">
+                                        <p className="text-center text-2xl">Subtraction</p>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Lower Limit:</p>
+                                            <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} />
+                                        </div>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Upper Limit:</p>
+                                            <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} />
+                                        </div>
+                                        Include this attempt
+                                        <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" />
+                                    </div>
+                                    
+                                </div>
+                                <div className="flex flex-row py-7">
+                                    <div name="subtractionBox" className="flex flex-col items-center px-7">
+                                        <p className="text-center text-2xl">Multiplication</p>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Lower Limit:</p>
+                                            <Input name="lowerLimitMul" id="lowerLimitMul" type="number" defaultValue={2} />
+                                        </div>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Upper Limit:</p>
+                                            <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} />
+                                        </div>
+                                        Include this attempt
+                                        <Checkbox onCheckedChange={setIncludeMultiplication} className="w-6 h-6 border-white border-2" name="multiplication" id="multiplication" />
+                                    </div>
+                                    
+                                    <div name="subtractionBox" className="flex flex-col items-center px-7">
+                                        <p className="text-center text-2xl">Division</p>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Lower Limit:</p>
+                                            <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} />
+                                        </div>
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p>Upper Limit:</p>
+                                            <Input name="upperLimitDiv" id="upperLimitDiv" type="number" defaultValue={50} />
+                                        </div>
+                                        Include this attempt
+                                        <Checkbox onCheckedChange={setIncludeDivision} className="w-6 h-6 border-white border-2" name="division" id="division" />
+                                    </div>
                                 </div>
 
-                                <Separator decorative={true} className="opacity-35 m-3" />
-                                <div name="subtractionBox" className="flex flex-col items-center">
-                                    <p className="text-center text-2xl">Subtraction</p>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Lower Limit:</p>
-                                        <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} />
-                                    </div>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Upper Limit:</p>
-                                        <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} />
-                                    </div>
-                                    Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" />
-                                </div>
-                                <Separator decorative={true} className="opacity-35 m-3" />
-                                <div name="subtractionBox" className="flex flex-col items-center">
-                                    <p className="text-center text-2xl">Multiplication</p>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Lower Limit:</p>
-                                        <Input name="lowerLimitMul" id="lowerLimitMul" type="number" defaultValue={2} />
-                                    </div>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Upper Limit:</p>
-                                        <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} />
-                                    </div>
-                                    Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeMultiplication} className="w-6 h-6 border-white border-2" name="multiplication" id="multiplication" />
-                                </div>
-                                <Separator decorative={true} className="opacity-35 m-3" />
-                                <div name="subtractionBox" className="flex flex-col items-center">
-                                    <p className="text-center text-2xl">Division</p>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Lower Limit:</p>
-                                        <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} />
-                                    </div>
-                                    <div className="flex flex-row gap-2 items-center">
-                                        <p>Upper Limit:</p>
-                                        <Input name="upperLimitDiv" id="upperLimitDiv" type="number" defaultValue={50} />
-                                    </div>
-                                    Include this attempt
-                                    <Checkbox onCheckedChange={setIncludeDivision} className="w-6 h-6 border-white border-2" name="division" id="division" />
-                                </div>
                                 <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
                             </form>
                         </div>

@@ -96,8 +96,8 @@ export default function AttemptPage() {
                 <h3 className="text-2xl text-white text-center">Number of correct answers: {attemptProps.numCorrect}</h3>
                 <h3 className="text-2xl text-white text-center">Number of wrong answers: {attemptProps.numWrong}</h3>
 
-                <div className="flex flex-row justify-center items-center mt-5 w-full">
-                    <div className="flex flex-col justify-center items-center w-full">
+                <div className="flex flex-row mt-5 justify-center items-center">
+                    <div className="flex flex-col w-1/2">
                         {
                             questions.map((question, index) => {
                                 return <QuestionBlob key={index} opA={question.opA} opB={question.opB} symbol={question.symbol} userA={question.userA} correctA={question.correctA} />
