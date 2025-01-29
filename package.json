@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next start",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "rebuild":"rm -rf .next && npm run build"
+    "rebuild":"rm -rf .next && npm run build",
+    "fastBuild": "next build && next start"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.4",
