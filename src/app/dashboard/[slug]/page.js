@@ -5,8 +5,12 @@ import { motion } from "motion/react";
 import { useParams, useSearchParams } from "next/navigation";
 import { AirVent } from "lucide-react";
 import QuestionBlob from "@/customComponents/questionBlob";
+import { Button } from "@/components/ui/button";
+import LoadingButton from "@/customComponents/loadingButton";
+import { useRouter } from "next/navigation";
 
 export default function AttemptPage() {
+    const router = useRouter();
     const params = useParams();
     const searchParams = useSearchParams();
     const [slug, setSlug] = useState("");
@@ -90,6 +94,13 @@ export default function AttemptPage() {
     else {
         return (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen">
+                <div className="flex flex-row justify-center gap-5 my-4 w-screen">
+                    <div>
+                        <Button className="" variant="secondary" onClick={() => { router.push("/dashboard") }}>Back To Dashboard</Button>
+                    </div>
+                    
+
+                </div>
                 <h1 className="text-5xl text-white text-center">Attempt Slug: {slug}</h1>
                 <h2 className="text-3xl text-white text-center">Date of attempt: {attemptProps.date}</h2>
                 <h3 className="text-2xl text-white text-center">Number of questions: {attemptProps.numQuestions}</h3>
