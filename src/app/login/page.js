@@ -4,16 +4,29 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { redirect } from "next/navigation";
 import { attemptLogin } from "@/utils/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import validateLogin from "../middle";
 
 export default function Login() {
-  
+
   const { toast } = useToast();
-  
-  const [loading,setLoading]=useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function checkLogin() {
+      const { status, response } = await validateLogin();
+      if (status === 200) {
+        router.push("/dashboard")
+      }
+    }
+    checkLogin();
+  },[])
+
+
   async function PreLogin(formData) {
     setLoading(true);
     const username = formData.get('username');
@@ -43,9 +56,9 @@ export default function Login() {
       password: password,
     }
 
-    const {status,response} = await attemptLogin(data)
-    console.log(status,response)
-    if(status===400){
+    const { status, response } = await attemptLogin(data)
+    console.log(status, response)
+    if (status === 400) {
       toast({
         variant: "destructive",
         title: "Login failed",
@@ -54,22 +67,22 @@ export default function Login() {
       setLoading(false);
       return;
     }
-    if(status===200){
+    if (status === 200) {
       toast({
         variant: "success",
         title: "Login successful",
         description: response,
       })
-      setTimeout(()=>{
+      setTimeout(() => {
         setLoading(false)
-router.push("/dashboard")
-      },2000)
-      
+        router.push("/dashboard")
+      }, 2000)
+
     }
   }
 
   return (
-    <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{duration: 1}}>
+    <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 1 }}>
       <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center">
         <Button className="mb-4" variant="secondary" onClick={() => { redirect("/") }}>Go to Home</Button>
         <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
@@ -81,8 +94,8 @@ router.push("/dashboard")
             <input name="password" id="password" type="password" placeholder="Password" className="bg-gray-800 text-white p-2 rounded w-full" />
           </div>
           <Button className="h-10" variant="secondary" disabled={loading} formAction={PreLogin}>
-            <Loader2 size={20} className={loading?"block":"hidden"} />
-            {loading?"Please Wait":"Submit"}
+            <Loader2 size={20} className={loading ? "block" : "hidden"} />
+            {loading ? "Please Wait" : "Submit"}
           </Button>
         </form>
         <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button>

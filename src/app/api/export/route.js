@@ -15,7 +15,7 @@ export async function POST(request) {
                 num_correct: attemptData.numCorrect,
             })
 
-        console.log("Attempt", status, error)
+
         if (status >= 200 && status < 300) {
             return NextResponse.json({ status: 200, response: "Attempt created successfully" })
         }
@@ -37,7 +37,6 @@ export async function POST(request) {
                 user_ans: questionData.userAns,
                 attempt_id: questionData.attemptID,
             })
-        console.log("Question",questionData.id, status, statusText)
         if (status >= 200 && status < 300) {
             return NextResponse.json({ status: 200, response: "Question created successfully" })
         }

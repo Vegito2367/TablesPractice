@@ -304,16 +304,11 @@ export default function Attempt({ params }) {
                         <div>
                             <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                         </div>
-                        <div>
-                            <Button className="" variant="secondary">Test Backend</Button>
-                        </div>
-
                     </div>
-                    <h1>Attempt page</h1>
-                    <p>user logged in is : {data.response.user.email}</p>
-                    <p>Slug: {slug}</p>
-                    <p>user ID: {userID}</p>
-                    <p>Question Types: {questionTypes}</p>
+
+                    <h1 className="text-white text-5xl text-center font-serif my-4">Get Ready To Math!</h1>
+                    <p className="text-3xl text-center my-4">Attempt ID: {slug}</p>
+                    <p className="text-2xl text-center my-3">user email: {data.response.user.email}</p>
                     <Timer totalTime={60} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
 
                     <AlertDialog open={showDialog} onOpenChange={handleDialog}>
@@ -329,7 +324,8 @@ export default function Attempt({ params }) {
                     </AlertDialog>
 
                     {timerActive && (
-                        <div className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
+                        <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
+                        className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
                             <div className="flex flex-col justify-center items-center">
                                 <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
                                 <form>
@@ -340,8 +336,11 @@ export default function Attempt({ params }) {
                                 </form>
 
                             </div>
-                        </div>
+                        </motion.div>
                     )}
+                    <div className="text-center text-white text-3xl my-5">
+                        <p>Score: {correctAnswers}</p>
+                    </div>
 
 
 

@@ -3,14 +3,24 @@ import styles from "@/app/styles.module.css"
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { attemptSignup } from "@/utils/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/router";
 import { redirect } from "next/navigation";
+import validateLogin from "../middle";
 export default function SignUp() {
     const { toast } = useToast();
     const [loading,setLoading]=useState(false);
+
+    useEffect(() => {
+    async function checkLogin() {
+      const { status, response } = await validateLogin();
+      if (status === 200) {
+        router.push("/dashboard")
+      }
+    }
+    checkLogin();
+  },[])
 
     async function PreSignup(formData) {
         setLoading(true);
