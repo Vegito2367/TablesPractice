@@ -4,24 +4,31 @@ import { createClient } from "./server";
 export async function attemptSignup(signUpdata) {
 
     const supabase = await createClient();
-    const { data, error } = await supabase.auth.signUp(signUpdata)
-    if (error) {
-        return {status: 400, response: error.message}
-        console.log(error)
-    }
 
-    console.log(data.user)
+    const { data, error, status} = await supabase.auth.signUp(signUpdata)
+    console.log(data, "data after request")
+    if (error) {
+        console.log(error)
+        if(error.status === 422){
+            return {status: 400, response: "Email already exists"}
+        }
+        return {status: 400, response: error.message}
+        
+    }
     try{
         const {insertError}  = await supabase
                     .from("userTable")
                     .insert({user_id:data.user.id, created_at: data.user.created_at, email:data.user.email})
+        if(insertError){
+            throw Error(insertError.message)
+        }
+        return {status: 200, response: "Sign up successful" }
     }
     catch(err){
         console.log(err)
+        return {status: 400, response: err.message}
     }
     
-
-    return {status: 200, response: "Sign up successful" }
 }
 
 export async function attemptLogin(data) {
@@ -38,12 +45,29 @@ export async function attemptLogin(data) {
 export async function validateServerLogin(){
     const supabase = await createClient();
     const {data ,error} = await supabase.auth.getUser();
+
     if(error || !data){
-        return {status: 400, response: "User not logged in"}
+        return {status: 400, response: error.message}
     }
-    else{
-        return {status: 200, response: data}
+    if(data){
+        console.log(data.user)
+        console.log("End of data ------------------------------")
+        const lastSignin = new Date(data.user.last_sign_in_at);
+        const currentTime = new Date();
+        const timeDiff = Math.abs(currentTime - lastSignin);
+        console.log(timeDiff)
+        if(timeDiff>10800000){
+            const {error} = await supabase.auth.signOut();
+            return {status: 400, response: "User session expired, please login again"}
+    
+        }
+        else{
+            return {status: 200, response: data}
+        }
     }
+    
+    
+    
     
 }
 

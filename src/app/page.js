@@ -1,27 +1,128 @@
 'use client'
-import Image from "next/image";
+
+import { useState,useEffect } from "react";
 import styles from "@/app/styles.module.css"
-import QuestionBlob from "@/customComponents/questionBlob";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { attemptSignup } from "@/utils/actions";
+import { motion } from "motion/react";
+import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
+import validateLogin from "./middle";
+import { useRouter } from "next/navigation";
 export default function Home() {
+
+  const { toast } = useToast();
+  const router = useRouter();
+    const [loading,setLoading]=useState(false);
+    // const [showOtp,setShowOtp]=useState(false);
+
+    useEffect(() => {
+    async function checkLogin() {
+      const { status, response } = await validateLogin();
+
+      if (status === 200) {
+        router.push("/dashboard")
+      }
+    }
+    checkLogin();
+  },[])
+  async function PreSignup(formData) {
+          setLoading(true);
+          const fullName = formData.get('fullName');
+          const firstName=fullName.split(" ")[0];
+          const lastName=fullName.split(" ")[1];
+          const email = formData.get('email');
+          const password = formData.get('password');
+          if (password.length < 8) {
+              toast({
+                  variant: "destructive",
+                  title: "Password too short",
+                  description: "Password must be at least 8 characters long",
+              })
+              setLoading(false);
   
+          }
+          else if (!email.includes("@")) {
+              toast({
+                  variant: "destructive",
+                  title: "Invalid email",
+                  description: "Please enter a valid email",
+              })
+              setLoading(false);
+          }
+          else if (!fullName.includes(" ")) {
+              toast({
+                  variant: "destructive",
+                  title: "Invalid name",
+                  description: "Please enter first and last name",
+              })
+              setLoading(false);
+          }
+          const data = {
+              email: email,
+              password: password,
+              options:{
+                  data:{
+                      firstName:firstName,
+                      lastName:lastName
+                  },
+                  emailRedirectTo: "https://mathquest-five.vercel.app/login"
+              }
+          }
+  
+          const {status,response}= await attemptSignup(data);
+          if(status===400){
+              toast({
+                  variant: "destructive",
+                  title: "Signup failed",
+                  description: response,
+              })
+              setLoading(false);
+              return;
+          }
+          if(status===200){
+              toast({
+                  title: "Please confirm your email",
+                  description: message,
+              })
+              
+          }
+      }
+
   return (
     <>
       <section className="h-screen bg-gray-950 flex flex-col justify-center items-center">
         <p className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
-          Hello, Welcome to MathQuest!
+          Hello, Welcome to MathQuest! Sign up below to start your math journey
         </p>
-        <div className="flex flex-row space-x-4">
-          <a href="/signup" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-            Sign up
-          </a>
-          <a href="/login" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-            Login
-          </a>
-          <a href="/dashboard" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-            Dashboard
-          </a>
-
-        </div>
+        
+          <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
+          <p className="text-4xl font-bold text-white mb-8">Enter Sign Up details </p>
+          <input name="fullName" id="fullName" type="text" placeholder="your mom" className="bg-gray-800 text-white p-2 rounded w-full"></input>
+          <div>
+              <input name="email" id="email" type="email" placeholder="Email" className="bg-gray-800 text-white p-2 rounded w-full" />
+          </div>
+          <div>
+              <input name="password" id="password" type="password" placeholder="Password" className="bg-gray-800 text-white p-2 rounded w-full" />
+          </div>
+          <Button className="h-10" variant="secondary" disabled={loading} formAction={PreSignup}>
+              {loading && <Loader2 className="animate-spin" size={20} strokeWidth={2} />}
+              {loading?"Please Wait":"Submit"}
+          </Button>
+      </form>
+        <Button className="mt-4" variant="secondary" onClick={() => { redirect("/login") }}>Already have an account? Login</Button>
+        
+        {/* {showOtp&& (
+          <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
+          <p className="text-4xl font-bold text-white mb-8">Enter OTP sent to your email </p>
+          <input name="otp" id="otp" type="text" placeholder="OTP" className="bg-gray-800 text-white p-2 rounded w-full"></input>
+          <Button className="h-10" variant="secondary" disabled={loading} formAction={confirmOtp}>
+              {loading && <Loader2 className="animate-spin" size={20} strokeWidth={2} />}
+              {loading?"Please Wait":"Submit"}
+          </Button>
+      </form>
+        )} */}
       </section>
 
     </>
