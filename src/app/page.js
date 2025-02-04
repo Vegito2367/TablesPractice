@@ -10,19 +10,33 @@ import { Loader2 } from "lucide-react";
 import { redirect } from "next/navigation";
 import validateLogin from "./middle";
 import { useRouter } from "next/navigation";
+import NavBar from "@/customComponents/navbar";
+import LoadingButton from "@/customComponents/loadingButton";
+
 export default function Home() {
 
   const { toast } = useToast();
   const router = useRouter();
-    const [loading,setLoading]=useState(false);
-    // const [showOtp,setShowOtp]=useState(false);
+
+  const [loading,setLoading]=useState(false);
+  const [loggedIn,setLoggedIn]=useState(false);
+    const buttonObjects = [
+      {
+        text: "About",
+        path: "/about",
+      },
+      {
+        text: "Contact",
+        path: "/contact",
+      },
+    ]
 
     useEffect(() => {
     async function checkLogin() {
       const { status, response } = await validateLogin();
 
       if (status === 200) {
-        router.push("/dashboard")
+        setLoggedIn(true);
       }
     }
     checkLogin();
@@ -93,6 +107,7 @@ export default function Home() {
   return (
     <>
       <section className="h-screen bg-gray-950 flex flex-col justify-center items-center">
+        <NavBar buttonObjects={buttonObjects}/>
         <p className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
           Hello, Welcome to MathQuest! Sign up below to start your math journey
         </p>

@@ -1,7 +1,5 @@
 "use client"
 
-import { col } from "motion/react-client";
-
 export default function QuestionBlob({ opA, opB, symbol, userA, correctA }) {
     const isCorrect = userA === correctA;
     const color = isCorrect ? "text-green-500" : "text-red-500";
