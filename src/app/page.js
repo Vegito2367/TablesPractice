@@ -107,13 +107,13 @@ export default function Home() {
   return (
     <>
       <section className="h-screen bg-gray-950 flex flex-col justify-center items-center">
-        <NavBar buttonObjects={buttonObjects}/>
+        {/* <NavBar buttonObjects={buttonObjects}/> */}
         <p className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
-          Hello, Welcome to MathQuest! Sign up below to start your math journey
+          Welcome to MathQuest! Sign up to start your math journey
         </p>
         
-          <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
-          <p className="text-4xl font-bold text-white mb-8">Enter Sign Up details </p>
+          <form className="flex flex-col space-y-4 px-10 w-2/5 animate-flyIn">
+          <p className="text-3xl font-bold text-white text-center mb-4">Enter Sign Up details </p>
           <input name="fullName" id="fullName" type="text" placeholder="your mom" className="bg-gray-800 text-white p-2 rounded w-full"></input>
           <div>
               <input name="email" id="email" type="email" placeholder="Email" className="bg-gray-800 text-white p-2 rounded w-full" />
@@ -138,6 +138,10 @@ export default function Home() {
           </Button>
       </form>
         )} */}
+        <div onClick={()=>{router.push("/about")}}
+        className="absolute bg-white text-black opacity-70 p-2 text-xl rounded-md text-center bottom-8 w-1/2 hover:opacity-100 cursor-pointer">
+        Made with passion by Tej Gumaste
+        </div>
       </section>
 
     </>
