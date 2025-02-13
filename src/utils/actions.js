@@ -6,7 +6,7 @@ export async function attemptSignup(signUpdata) {
     const supabase = await createClient();
 
     const { data, error, status} = await supabase.auth.signUp(signUpdata)
-    console.log(data, "data after request")
+
     if (error) {
         console.log(error)
         if(error.status === 422){
@@ -50,12 +50,10 @@ export async function validateServerLogin(){
         return {status: 400, response: error.message}
     }
     if(data){
-        console.log(data.user)
-        console.log("End of data ------------------------------")
         const lastSignin = new Date(data.user.last_sign_in_at);
         const currentTime = new Date();
         const timeDiff = Math.abs(currentTime - lastSignin);
-        console.log(timeDiff)
+
         if(timeDiff>10800000){
             const {error} = await supabase.auth.signOut();
             return {status: 400, response: "User session expired, please login again"}

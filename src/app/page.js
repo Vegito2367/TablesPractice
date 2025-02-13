@@ -1,6 +1,6 @@
 'use client'
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "@/app/styles.module.css"
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -18,20 +18,20 @@ export default function Home() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const [loading,setLoading]=useState(false);
-  const [loggedIn,setLoggedIn]=useState(false);
-    const buttonObjects = [
-      {
-        text: "About",
-        path: "/about",
-      },
-      {
-        text: "Contact",
-        path: "/contact",
-      },
-    ]
+  const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const buttonObjects = [
+    {
+      text: "About",
+      path: "/about",
+    },
+    {
+      text: "Contact",
+      path: "/contact",
+    },
+  ]
 
-    useEffect(() => {
+  useEffect(() => {
     async function checkLogin() {
       const { status, response } = await validateLogin();
 
@@ -40,107 +40,134 @@ export default function Home() {
       }
     }
     checkLogin();
-  },[])
+  }, [])
   async function PreSignup(formData) {
-          setLoading(true);
-          const fullName = formData.get('fullName');
-          const firstName=fullName.split(" ")[0];
-          const lastName=fullName.split(" ")[1];
-          const email = formData.get('email');
-          const password = formData.get('password');
-          if (password.length < 8) {
-              toast({
-                  variant: "destructive",
-                  title: "Password too short",
-                  description: "Password must be at least 8 characters long",
-              })
-              setLoading(false);
-  
-          }
-          else if (!email.includes("@")) {
-              toast({
-                  variant: "destructive",
-                  title: "Invalid email",
-                  description: "Please enter a valid email",
-              })
-              setLoading(false);
-          }
-          else if (!fullName.includes(" ")) {
-              toast({
-                  variant: "destructive",
-                  title: "Invalid name",
-                  description: "Please enter first and last name",
-              })
-              setLoading(false);
-          }
-          const data = {
-              email: email,
-              password: password,
-              options:{
-                  data:{
-                      firstName:firstName,
-                      lastName:lastName
-                  },
-                  emailRedirectTo: "https://mathquest-five.vercel.app/login"
-              }
-          }
-  
-          const {status,response}= await attemptSignup(data);
-          if(status===400){
-              toast({
-                  variant: "destructive",
-                  title: "Signup failed",
-                  description: response,
-              })
-              setLoading(false);
-              return;
-          }
-          if(status===200){
-              toast({
-                  title: "Please confirm your email",
-                  description: message,
-              })
-              
-          }
+    setLoading(true);
+    const fullName = formData.get('fullName');
+    const firstName = fullName.split(" ")[0];
+    const lastName = fullName.split(" ")[1];
+    const email = formData.get('email');
+    const password = formData.get('password');
+    if (password.length < 8) {
+      toast({
+        variant: "destructive",
+        title: "Password too short",
+        description: "Password must be at least 8 characters long",
+      })
+      setLoading(false);
+
+    }
+    else if (!email.includes("@")) {
+      toast({
+        variant: "destructive",
+        title: "Invalid email",
+        description: "Please enter a valid email",
+      })
+      setLoading(false);
+    }
+    else if (!fullName.includes(" ")) {
+      toast({
+        variant: "destructive",
+        title: "Invalid name",
+        description: "Please enter first and last name",
+      })
+      setLoading(false);
+    }
+    const data = {
+      email: email,
+      password: password,
+      options: {
+        data: {
+          firstName: firstName,
+          lastName: lastName
+        },
+        emailRedirectTo: "https://mathquest-five.vercel.app/login"
       }
+    }
+
+    const { status, response } = await attemptSignup(data);
+    if (status === 400) {
+      toast({
+        variant: "destructive",
+        title: "Signup failed",
+        description: response,
+      })
+      setLoading(false);
+      return;
+    }
+    if (status === 200) {
+      toast({
+        title: "Please confirm your email",
+        description: message,
+      })
+
+    }
+  }
 
   return (
     <>
       <section className="h-screen bg-gray-950 flex flex-col justify-center items-center">
-        {/* <NavBar buttonObjects={buttonObjects}/> */}
-        <p className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
-          Welcome to MathQuest! Sign up to start your math journey
+        <h1 className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
+          Welcome to <span className="text-orange-400">MathQuest</span>! 🚀
+        </h1>
+        <p className="text-xl text-gray-300 text-center mb-8 animate-flyIn">
+          Sign up now and start your math journey!
         </p>
-        
-          <form className="flex flex-col space-y-4 px-10 w-2/5 animate-flyIn">
-          <p className="text-3xl font-bold text-white text-center mb-4">Enter Sign Up details </p>
-          <input name="fullName" id="fullName" type="text" placeholder="your mom" className="bg-gray-800 text-white p-2 rounded w-full"></input>
-          <div>
-              <input name="email" id="email" type="email" placeholder="Email" className="bg-gray-800 text-white p-2 rounded w-full" />
-          </div>
-          <div>
-              <input name="password" id="password" type="password" placeholder="Password" className="bg-gray-800 text-white p-2 rounded w-full" />
-          </div>
-          <Button className="h-10" variant="secondary" disabled={loading} formAction={PreSignup}>
-              {loading && <Loader2 className="animate-spin" size={20} strokeWidth={2} />}
-              {loading?"Please Wait":"Submit"}
-          </Button>
-      </form>
-        <Button className="mt-4" variant="secondary" onClick={() => { redirect("/login") }}>Already have an account? Login</Button>
-        
-        {/* {showOtp&& (
-          <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
-          <p className="text-4xl font-bold text-white mb-8">Enter OTP sent to your email </p>
-          <input name="otp" id="otp" type="text" placeholder="OTP" className="bg-gray-800 text-white p-2 rounded w-full"></input>
-          <Button className="h-10" variant="secondary" disabled={loading} formAction={confirmOtp}>
-              {loading && <Loader2 className="animate-spin" size={20} strokeWidth={2} />}
-              {loading?"Please Wait":"Submit"}
-          </Button>
-      </form>
-        )} */}
-        <div onClick={()=>{router.push("/about")}}
-        className="absolute bg-white text-black opacity-70 p-2 text-xl rounded-md text-center bottom-8 w-1/2 hover:opacity-100 cursor-pointer">
-        Made with passion by Tej Gumaste
+
+
+        <form className="flex flex-col space-y-4 bg-gray-800 px-8 py-6 w-full max-w-md rounded-lg shadow-lg animate-flyIn">
+          <h2 className="text-3xl font-bold text-white text-center mb-4">
+            Enter Sign-Up Details
+          </h2>
+
+
+          <input
+            name="fullName"
+            id="fullName"
+            type="text"
+            placeholder="Full Name"
+            className="bg-gray-700 text-white p-3 rounded w-full border border-gray-600 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
+
+
+          <input
+            name="email"
+            id="email"
+            type="email"
+            placeholder="Email"
+            className="bg-gray-700 text-white p-3 rounded w-full border border-gray-600 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
+
+
+          <input
+            name="password"
+            id="password"
+            type="password"
+            placeholder="Password"
+            className="bg-gray-700 text-white p-3 rounded w-full border border-gray-600 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          />
+
+
+          <button
+            className="h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded transition-all duration-200 flex items-center justify-center disabled:opacity-50"
+            disabled={loading}
+            formAction={PreSignup}
+          >
+            {loading && <Loader2 className="animate-spin mr-2" size={20} strokeWidth={2} />}
+            {loading ? "Please Wait..." : "Sign Up"}
+          </button>
+        </form>
+
+        {/* Login Redirect */}
+        <button
+          className="mt-6 text-orange-400 hover:text-orange-300 transition-all duration-200"
+          onClick={() => { redirect("/login") }}
+        >
+          Already have an account? <span className="underline">Login</span>
+        </button>
+        <div onClick={() => { router.push("/about") }}
+          className="absolute bg-orange-300 text-black p-2 text-xl rounded-md text-center bottom-8 w-1/2 hover:bg-orange-500 cursor-pointer">
+          Made with passion by Tej Gumaste - Learn More
         </div>
       </section>
 

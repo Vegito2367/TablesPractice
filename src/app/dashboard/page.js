@@ -402,10 +402,10 @@ export default function Dashboard() {
             <section className="w-screen bg-gray-950">
                 <div className="flex flex-row justify-center gap-5 w-screen">
                     <div>
-                        <LoadingButton loading={loading} classes="" variant="secondary" title="Logout" callback={handleLogout} />
+                        <LoadingButton loading={loading} classes="" title="Logout" callback={handleLogout} />
                     </div>
                     <div>
-                        <Button className="" variant="secondary" onClick={() => { router.push("/") }}>Home</Button>
+                        <Button className="bg-orange-500 font-bold" onClick={() => { router.push("/") }}>Home</Button>
                     </div>
                     <div>
                         <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt} />
@@ -414,10 +414,21 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex flex-col justify-center pt-5">
-                    <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                    <p className="pt-10">each attempt, as a number of questions, each question has number of rights and wrongs.</p>
-                    {data.response && data.response.user && <p>{data.response.user.email}</p>}
-                    <div className="flex flex-row border-2 border-white rounded-lg m-2">
+                    <h1 className="text-white text-5xl text-center font-serif font-bold mb-6">
+                        Dashboard 📊
+                    </h1>
+                    <p className="text-lg text-gray-300 text-center">
+                        Track your progress! Each attempt consists of a set number of questions, and
+                        for each question, you can see the number of correct and incorrect responses.
+                    </p>
+
+
+                    {data?.response?.user?.email && (
+                        <p className="mt-6 text-orange-400 text-center text-lg font-semibold">
+                            Logged in as: {data.response.user.email}
+                        </p>
+                    )}
+                    <div className="flex flex-row border-2 border-orange-500 rounded-lg m-2">
                         <div name="attempts" className="w-1/2 max-h-screen overflow-y-auto">
                             {userID && attempts.length === 0 && <Skeleton className="w-1/2 h-1/2" />}
                             {attempts.map((attempt, index) => {
@@ -430,73 +441,98 @@ export default function Dashboard() {
                             })}
                         </div>
                         <div name="constraints" className="text-white w-1/2 items-center flex flex-col rounded-md">
-                            <p className="text-3xl mt-3">Constraints</p>
-                            <Separator decorative={true} className="opacity-35 m-3" />
-                            <form className="flex flex-col items-center gap-4">
-                                <div className="flex flex-row py-7">
-                                    <div name="additionBox" className="flex flex-col items-center w-1/2 px-7">
-                                        <p className="text-center text-2xl">Addition</p>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Lower Limit:</p>
-                                            <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} />
-                                        </div>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Upper Limit:</p>
-                                            <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} />
-                                        </div>
-                                        Include this attempt
-                                        <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-white border-2" name="addition" id="addition" />
+                            <form className="flex flex-col items-center gap-6 bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl">
+                                <h2 className="text-3xl text-white font-bold text-center mb-4">Customize Your Math Practice</h2>
 
+                                <div className="flex flex-row justify-center gap-12 w-full">
+                                    <div name="additionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Addition ➕</p>
+
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p className="text-white">Lower Limit:</p>
+                                            <Input name="lowerLimitAdd" id="lowerLimitAdd" type="number" defaultValue={2} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <div className="flex flex-row gap-2 items-center mt-3">
+                                            <p className="text-white">Upper Limit:</p>
+                                            <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <label className="mt-4 text-white flex items-center gap-2">
+                                            <Checkbox onCheckedChange={setIncludeAddition} className="w-6 h-6 border-orange-500 border-2" name="addition" id="addition" />
+                                            Include operation
+                                        </label>
                                     </div>
 
-                                    
-                                    <div name="subtractionBox" className="flex flex-col items-center w-1/2 px-7">
-                                        <p className="text-center text-2xl">Subtraction</p>
+                                    {/* Subtraction Box */}
+                                    <div name="subtractionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Subtraction ➖</p>
+
                                         <div className="flex flex-row gap-2 items-center">
-                                            <p>Lower Limit:</p>
-                                            <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} />
+                                            <p className="text-white">Lower Limit:</p>
+                                            <Input name="lowerLimitSub" id="lowerLimitSub" type="number" defaultValue={2} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Upper Limit:</p>
-                                            <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} />
+
+                                        <div className="flex flex-row gap-2 items-center mt-3">
+                                            <p className="text-white">Upper Limit:</p>
+                                            <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
-                                        Include this attempt
-                                        <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-white border-2" name="subtraction" id="subtraction" />
-                                    </div>
-                                    
-                                </div>
-                                <div className="flex flex-row py-7">
-                                    <div name="subtractionBox" className="flex flex-col items-center px-7">
-                                        <p className="text-center text-2xl">Multiplication</p>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Lower Limit:</p>
-                                            <Input name="lowerLimitMul" id="lowerLimitMul" type="number" defaultValue={2} />
-                                        </div>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Upper Limit:</p>
-                                            <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} />
-                                        </div>
-                                        Include this attempt
-                                        <Checkbox onCheckedChange={setIncludeMultiplication} className="w-6 h-6 border-white border-2" name="multiplication" id="multiplication" />
-                                    </div>
-                                    
-                                    <div name="subtractionBox" className="flex flex-col items-center px-7">
-                                        <p className="text-center text-2xl">Division</p>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Lower Limit:</p>
-                                            <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} />
-                                        </div>
-                                        <div className="flex flex-row gap-2 items-center">
-                                            <p>Upper Limit:</p>
-                                            <Input name="upperLimitDiv" id="upperLimitDiv" type="number" defaultValue={50} />
-                                        </div>
-                                        Include this attempt
-                                        <Checkbox onCheckedChange={setIncludeDivision} className="w-6 h-6 border-white border-2" name="division" id="division" />
+
+                                        <label className="mt-4 text-white flex items-center gap-2">
+                                            <Checkbox onCheckedChange={setIncludeSubtraction} className="w-6 h-6 border-orange-500 border-2" name="subtraction" id="subtraction" />
+                                            Include operation
+                                        </label>
                                     </div>
                                 </div>
 
-                                <Button variant="secondary" className="w-full" formAction={savePreferences}>Submit</Button>
+                                {/* Second Row: Multiplication & Division */}
+                                <div className="flex flex-row justify-center gap-12 w-full">
+                                    {/* Multiplication Box */}
+                                    <div name="multiplicationBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Multiplication ✖️</p>
+
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p className="text-white">Lower Limit:</p>
+                                            <Input name="lowerLimitMul" id="lowerLimitMul" type="number" defaultValue={2} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <div className="flex flex-row gap-2 items-center mt-3">
+                                            <p className="text-white">Upper Limit:</p>
+                                            <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <label className="mt-4 text-white flex items-center gap-2">
+                                            <Checkbox onCheckedChange={setIncludeMultiplication} className="w-6 h-6 border-orange-500 border-2" name="multiplication" id="multiplication" />
+                                            Include operation
+                                        </label>
+                                    </div>
+
+                                    {/* Division Box */}
+                                    <div name="divisionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Division ➗</p>
+
+                                        <div className="flex flex-row gap-2 items-center">
+                                            <p className="text-white">Lower Limit:</p>
+                                            <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <div className="flex flex-row gap-2 items-center mt-3">
+                                            <p className="text-white">Upper Limit:</p>
+                                            <Input name="upperLimitDiv" id="upperLimitDiv" type="number" defaultValue={50} className="bg-gray-700 text-white p-2 rounded" />
+                                        </div>
+
+                                        <label className="mt-4 text-white flex items-center gap-2">
+                                            <Checkbox onCheckedChange={setIncludeDivision} className="w-6 h-6 border-orange-500 border-2" name="division" id="division" />
+                                            Include operation
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <Button variant="secondary" className="w-full mt-6 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition-all duration-200" formAction={savePreferences}>
+                                    Submit
+                                </Button>
                             </form>
+
                         </div>
                     </div>
 

@@ -1,36 +1,68 @@
 "use client"
 import { motion } from "motion/react"
 import Image from "next/image"
+import TechStack from "@/customComponents/techStack"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 export default function About(){
+    const router = useRouter();
     return(
         <section className="bg-gray-950 flex flex-col items-center p-8">
+            <Button variant="secondary" className="absolute top-5 left-5" onClick={()=>{router.push("/")}}>Back</Button>
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
             name="mainProfileContainer" className="flex flex-row shadow-xl shadow-orange-300 rounded-xl bg-slate-800 p-6 h-4/6 w-5/6 my-5 hover:shadow-orange-500">
                 <div name="photoContainer" className=" flex justify-center items-center">
-                    <Image src="/ProfilePic.jpeg" alt="Profile" className="rounded-md h-full" width={300} height={200} />
+                    <Image src="/ProfilePic.jpeg" alt="Profile" className="rounded-md h-full" width={400} height={200} />
                 </div>
-                <div name="textContainer" className="w-2/3 flex flex-col justify-center p-4 font-mono">
-                    <p className="text-2xl my-2 text-white"> 
-                        Hello, I'm <span className="font-bold">Tej Gumaste</span> and I'm a junior studying computer science with a minor in Mathematics at <b>University of Kansas</b>.
-                    </p>
-                    
-                    <p className="text-2xl my-2 text-white">
-                        I'm passionate about developing software that helps people around me and work on projects that are on the intersection of Mathematics
-                        and Computer Science. I'm particularly interested in applying Computer Science and Machine Learning to help solve non-computer science problems.
-                    </p>
+                <div name="textContainer" className="w-2/3 flex flex-col justify-center p-4 font-mono gap-5">
+                    <h2 className="text-4xl font-bold text-white mb-4 tracking-wide">
+                Hi, I’m <span className="text-orange-400">Tej</span> 👋
+            </h2>
+            <p className="text-lg leading-relaxed">
+                I’m a passionate <span className="text-white font-semibold">computer science student</span> with a strong interest in 
+                <span className="text-orange-400"> machine learning, data science</span>, and 
+                <span className="text-orange-400"> full-stack development</span>. My experience spans across building 
+                interpretable ML models in the medical field, crafting efficient backend systems, and working on innovative projects like 
+                <span className="text-white font-semibold"> MathQuest</span>, which challenges my ability to design scalable, performant applications.
+            </p>
+            <p className="text-lg leading-relaxed">
+                I thrive in problem-solving and I'm always willing to pick up new skills and technologies as I do exciting projects. Beyond technical skills, I value 
+                <span className="text-orange-400"> clean, maintainable code</span> and user-focused design, ensuring that the solutions I build are 
+                not only functional but also <span className="text-white font-semibold"> intuitive</span>.
+            </p>
+            
+            <p className="text-lg font-semibold text-white">
+                Let’s connect! 🚀
+            </p>
                     
                 </div>
             </motion.div>
-            <p className="text-4xl text-white my-4"> Why MathQuest? </p>
-            <p className="text-2xl text-white text-center max-w-5xl font-mono">
-                I made MathQuest to help students build their speed mental math skills in an interactive and accountable manner. Originally,
-                MathQuest was a project made for my brother to improve his mental math skills. I first asked him to use zetamac (also a very good website)
-                but realized that tracking questions and progress is essential for improvement and thus MathQuest was born.
+            <h2 className="text-5xl font-bold text-white my-6 tracking-wide">
+                Why <span className="text-orange-400">MathQuest?</span>
+            </h2>
+            <p className="text-lg text-gray-300 max-w-4xl leading-relaxed font-mono mb-6">
+                I made <span className="font-semibold text-orange-500">MathQuest</span> to help students build their 
+                speed and mental math skills in an interactive and accountable manner. Originally, 
+                MathQuest was a project made for my brother to improve his mental math skills. I first 
+                asked him to use <a href="https://arithmetic.zetamac.com" className="text-orange-400 underline">Zetamac</a> (also a very good website), 
+                but I realized that tracking questions and progress is essential for improvement—thus, MathQuest was born.
             </p>
-            <p className="text-2xl text-white text-center max-w-5xl font-mono">
-                I hope you enjoy using MathQuest as much as I enjoyed making it. If you have any suggestions or feedback, please feel free to reach out to me.
+            <p className="text-lg text-gray-300 max-w-4xl leading-relaxed font-mono">
+                I hope you enjoy using MathQuest as much as I enjoyed making it. It is still a WIP and this is only the first iteration of the project.
+                Currently, MathQuest supports addition, subtraction, multiplication, and division questions with questions generated by a custom math engine made by me :).
             </p>
-            
+            <br></br>
+            <p className="text-lg text-gray-300 max-w-4xl leading-relaxed font-mono">
+                The next steps include adding dynamic question difficulty, graphs to view overtime progress concisely, improving the UI/UX, and making the website more accessible.
+                If you have any suggestions, feedback or are interested in working on the UI/UX for the website, please feel free to <a href="mailto:tej.gumaste@gmail.com" className="text-orange-400 underline">reach out</a> to me.
+                I am a college student so any work done would need to be done on a volunteer basis.
+            </p>
+
+            <h2 className="text-5xl font-bold text-white my-6 tracking-wide">
+                Technologies <span className="text-orange-400">Used</span>
+            </h2>
+            <TechStack />
+
         </section>
     )
 }
