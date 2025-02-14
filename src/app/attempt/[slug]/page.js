@@ -296,13 +296,13 @@ export default function Attempt({ params }) {
     else {
         return (
             <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
-                <section className="h-screen w-screen bg-gray-950 text-white">
+                <section className="h-screen w-screen bg-gray-950 text-white flex flex-col items-center">
                     <div className="flex flex-row justify-center gap-5 w-screen">
                         <div>
-                            <Button className="bg-orange-500 font-bold" onClick={() => { redirect("/") }}>Home</Button>
+                            <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={() => { redirect("/") }}>Home</Button>
                         </div>
                         <div>
-                            <Button className="bg-orange-500 font-bold" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
+                            <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                         </div>
                     </div>
 
@@ -348,7 +348,7 @@ export default function Attempt({ params }) {
                             </div>
                         </motion.div>
                     )}
-                    <div className="text-center text-white text-3xl bg-gray-800 px-6 py-4 rounded-lg shadow-lg my-6">
+                    <div className="text-center text-white w-7/12 text-3xl bg-gray-800 px-6 py-4 rounded-lg shadow-lg my-6">
                         <p className="font-bold">Score: <span className="text-orange-400">{correctAnswers}</span></p>
                     </div>
 

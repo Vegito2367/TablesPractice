@@ -405,7 +405,7 @@ export default function Dashboard() {
                         <LoadingButton loading={loading} classes="" title="Logout" callback={handleLogout} />
                     </div>
                     <div>
-                        <Button className="bg-orange-500 font-bold" onClick={() => { router.push("/") }}>Home</Button>
+                        <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={() => { router.push("/") }}>Home</Button>
                     </div>
                     <div>
                         <LoadingButton className="" loading={loading} variant="secondary" title="New Attempt" callback={newAttempt} />
@@ -415,7 +415,7 @@ export default function Dashboard() {
 
                 <div className="flex flex-col justify-center pt-5">
                     <h1 className="text-white text-5xl text-center font-serif font-bold mb-6">
-                        Dashboard 📊
+                        Dashboard 
                     </h1>
                     <p className="text-lg text-gray-300 text-center">
                         Track your progress! Each attempt consists of a set number of questions, and
@@ -455,7 +455,7 @@ export default function Dashboard() {
 
                                         <div className="flex flex-row gap-2 items-center mt-3">
                                             <p className="text-white">Upper Limit:</p>
-                                            <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={15} className="bg-gray-700 text-white p-2 rounded" />
+                                            <Input name="upperLimitAdd" id="upperLimitAdd" type="number" defaultValue={100} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
 
                                         <label className="mt-4 text-white flex items-center gap-2">
@@ -464,7 +464,7 @@ export default function Dashboard() {
                                         </label>
                                     </div>
 
-                                    {/* Subtraction Box */}
+
                                     <div name="subtractionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
                                         <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Subtraction ➖</p>
 
@@ -475,7 +475,7 @@ export default function Dashboard() {
 
                                         <div className="flex flex-row gap-2 items-center mt-3">
                                             <p className="text-white">Upper Limit:</p>
-                                            <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={15} className="bg-gray-700 text-white p-2 rounded" />
+                                            <Input name="upperLimitSub" id="upperLimitSub" type="number" defaultValue={100} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
 
                                         <label className="mt-4 text-white flex items-center gap-2">
@@ -485,9 +485,9 @@ export default function Dashboard() {
                                     </div>
                                 </div>
 
-                                {/* Second Row: Multiplication & Division */}
+
                                 <div className="flex flex-row justify-center gap-12 w-full">
-                                    {/* Multiplication Box */}
+
                                     <div name="multiplicationBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
                                         <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Multiplication ✖️</p>
 
@@ -498,7 +498,7 @@ export default function Dashboard() {
 
                                         <div className="flex flex-row gap-2 items-center mt-3">
                                             <p className="text-white">Upper Limit:</p>
-                                            <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={100} className="bg-gray-700 text-white p-2 rounded" />
+                                            <Input name="upperLimitMul" id="upperLimitMul" type="number" defaultValue={50} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
 
                                         <label className="mt-4 text-white flex items-center gap-2">
@@ -513,7 +513,7 @@ export default function Dashboard() {
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
-                                            <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={3} className="bg-gray-700 text-white p-2 rounded" />
+                                            <Input name="lowerLimitDiv" id="lowerLimitDiv" type="number" defaultValue={2} className="bg-gray-700 text-white p-2 rounded" />
                                         </div>
 
                                         <div className="flex flex-row gap-2 items-center mt-3">
