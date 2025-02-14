@@ -51,28 +51,28 @@ export default function AttemptPage() {
     }, [])
 
     async function retrieveQuestions(uID, aID) {
-        console.log("attempt page",uID, aID)
+        console.log("attempt page", uID, aID)
         try {
             const response = await fetch(`/api/fetchQuestion?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();
             if (data.status === 200) {
                 console.log(data.payload)
-                data.payload.forEach((elem)=>{
-                    const newQ={
-                        opA:elem.operand_a,
-                        opB:elem.operand_b,
-                        symbol:elem.operand,
-                        correctA:elem.correct_ans,
-                        userA:elem.user_ans,
+                data.payload.forEach((elem) => {
+                    const newQ = {
+                        opA: elem.operand_a,
+                        opB: elem.operand_b,
+                        symbol: elem.operand,
+                        correctA: elem.correct_ans,
+                        userA: elem.user_ans,
                         id: elem.qID.substring(9)
                     }
-                    setQuestions((prev)=>{
-                        return [...prev,newQ]
+                    setQuestions((prev) => {
+                        return [...prev, newQ]
                     })
                 })
 
-                questions.sort((a,b)=>{
-                    return a.id-b.id;
+                questions.sort((a, b) => {
+                    return a.id - b.id;
                 })
             }
             else {
@@ -94,18 +94,35 @@ export default function AttemptPage() {
     else {
         return (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen">
-                <div className="flex flex-row justify-center gap-5 my-4 w-screen">
+                <div className="flex flex-row justify-center gap-5 py-4 w-screen">
                     <div>
-                        <Button className="" variant="secondary" onClick={() => { router.push("/dashboard") }}>Back To Dashboard</Button>
+                        <Button className="bg-orange-400 hover:bg-orange-500" onClick={() => { router.push("/dashboard") }}>Back To Dashboard</Button>
                     </div>
-                    
+
 
                 </div>
-                <h1 className="text-5xl text-white text-center">Attempt Slug: {slug}</h1>
-                <h2 className="text-3xl text-white text-center">Date of attempt: {attemptProps.date}</h2>
-                <h3 className="text-2xl text-white text-center">Number of questions: {attemptProps.numQuestions}</h3>
-                <h3 className="text-2xl text-white text-center">Number of correct answers: {attemptProps.numCorrect}</h3>
-                <h3 className="text-2xl text-white text-center">Number of wrong answers: {attemptProps.numWrong}</h3>
+                <div className="bg-gray-900 text-center text-white p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
+                    <h1 className="text-5xl font-bold text-orange-400 mb-4">
+                        Attempt Slug: {slug}
+                    </h1>
+
+                    <h2 className="text-3xl font-semibold mb-3">
+                        Date of Attempt: <span className="text-gray-300">{attemptProps.date}</span>
+                    </h2>
+
+                    <h3 className="text-2xl font-medium mb-2">
+                        Total Questions: <span className="text-orange-400">{attemptProps.numQuestions}</span>
+                    </h3>
+
+                    <h3 className="text-2xl font-medium mb-2">
+                        Correct Answers: <span className="text-green-400">{attemptProps.numCorrect}</span>
+                    </h3>
+
+                    <h3 className="text-2xl font-medium">
+                        Wrong Answers: <span className="text-red-400">{attemptProps.numWrong}</span>
+                    </h3>
+                </div>
+
 
                 <div className="flex flex-row mt-5 justify-center items-center">
                     <div className="flex flex-col w-1/2">

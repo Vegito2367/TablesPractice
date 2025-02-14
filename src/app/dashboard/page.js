@@ -417,21 +417,21 @@ export default function Dashboard() {
                     <h1 className="text-white text-5xl text-center font-serif font-bold mb-6">
                         Dashboard 
                     </h1>
-                    <p className="text-lg text-gray-300 text-center">
+                    <p className="text-lg text-gray-300 text-center font-mono">
                         Track your progress! Each attempt consists of a set number of questions, and
                         for each question, you can see the number of correct and incorrect responses.
                     </p>
 
 
                     {data?.response?.user?.email && (
-                        <p className="mt-6 text-orange-400 text-center text-lg font-semibold">
+                        <p className="mt-6 text-orange-400 text-center text-lg font-mono font-semibold">
                             Logged in as: {data.response.user.email}
                         </p>
                     )}
-                    <div className="flex flex-row border-2 border-orange-500 rounded-lg m-2">
+                    <div className="flex flex-row border-2 border-orange-500 rounded-lg m-2 font-mono">
                         <div name="attempts" className="w-1/2 max-h-screen overflow-y-auto">
-                            {userID && attempts.length === 0 && <Skeleton className="w-1/2 h-1/2" />}
-                            {attempts.map((attempt, index) => {
+                            {userID && attempts.length === 0 && <Skeleton className="bg-slate-200" />}
+                            {attempts.slice(0).reverse().map((attempt, index) => {
                                 return <Attempt key={index} numberOfQuestions={attempt.totalQuestions}
                                     numberOfRights={attempt.numCorrect}
                                     numberOfWrongs={attempt.numWrong}
