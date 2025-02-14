@@ -8,7 +8,7 @@ export default function About(){
     const router = useRouter();
     return(
         <section className="bg-gray-950 flex flex-col items-center p-8">
-            <Button variant="secondary" className="absolute top-5 left-5" onClick={()=>{router.push("/")}}>Back</Button>
+            <Button className="absolute top-5 left-5 bg-orange-400 hover:bg-orange-500" onClick={()=>{router.push("/")}}>Back</Button>
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
             name="mainProfileContainer" className="flex flex-row shadow-xl shadow-orange-300 rounded-xl bg-slate-800 p-6 h-4/6 w-5/6 my-5 hover:shadow-orange-500">
                 <div name="photoContainer" className=" flex justify-center items-center">
@@ -32,7 +32,7 @@ export default function About(){
             </p>
             
             <p className="text-lg font-semibold text-white">
-                Let’s connect! 🚀
+                Let’s connect!
             </p>
                     
                 </div>

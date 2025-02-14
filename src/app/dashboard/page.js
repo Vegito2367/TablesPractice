@@ -389,17 +389,23 @@ export default function Dashboard() {
     if (data.status === 400) {
         return (
             <>
-                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white">
-                    <Button className="absolute top-5 left-0" variant="secondary" onClick={() => { router.push("/") }}>Home</Button>
-                    <h1 className="text-white text-5xl text-center font-serif">Dashboard</h1>
-                    <p> You are not logged in</p>
+                <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center text-white font-mono relative">
+                    <Button
+                        className="absolute top-5 left-5 bg-orange-400 font-bold px-4 py-2 rounded-md shadow-md 
+                   hover:bg-orange-500 transition-all duration-200"
+                        onClick={() => { router.push("/") }}>
+                        Home
+                    </Button>
+                    <h1 className="text-5xl font-serif font-bold mb-4">Dashboard</h1>
+                    <p className="text-lg text-gray-300">You are not logged in</p>
                 </section>
+
             </>
         )
     }
     return (
         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
-            <section className="w-screen bg-gray-950">
+            <section className="w-screen bg-gray-950 font-mono">
                 <div className="flex flex-row justify-center gap-5 w-screen">
                     <div>
                         <LoadingButton loading={loading} classes="" title="Logout" callback={handleLogout} />
@@ -414,8 +420,8 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex flex-col justify-center pt-5">
-                    <h1 className="text-white text-5xl text-center font-serif font-bold mb-6">
-                        Dashboard 
+                    <h1 className="text-white text-6xl text-center font-mono font-bold mb-6">
+                        Dashboard
                     </h1>
                     <p className="text-lg text-gray-300 text-center font-mono">
                         Track your progress! Each attempt consists of a set number of questions, and
@@ -446,7 +452,7 @@ export default function Dashboard() {
 
                                 <div className="flex flex-row justify-center gap-12 w-full">
                                     <div name="additionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Addition ➕</p>
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Addition</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -466,7 +472,7 @@ export default function Dashboard() {
 
 
                                     <div name="subtractionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Subtraction ➖</p>
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Subtraction</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -489,7 +495,7 @@ export default function Dashboard() {
                                 <div className="flex flex-row justify-center gap-12 w-full">
 
                                     <div name="multiplicationBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Multiplication ✖️</p>
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Multiplication</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -509,7 +515,7 @@ export default function Dashboard() {
 
                                     {/* Division Box */}
                                     <div name="divisionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Division ➗</p>
+                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Division</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>

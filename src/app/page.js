@@ -106,7 +106,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="h-screen bg-gray-950 flex flex-col justify-center items-center">
+      <section className="h-screen bg-gray-950 flex flex-col justify-center items-center font-mono">
         <h1 className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
           Welcome to <span className="text-orange-400">MathQuest</span>! 🚀
         </h1>
@@ -116,7 +116,7 @@ export default function Home() {
 
 
         <form className="flex flex-col space-y-4 bg-gray-800 px-8 py-6 w-full max-w-md rounded-lg shadow-lg animate-flyIn">
-          <h2 className="text-3xl font-bold text-white text-center mb-4">
+          <h2 className="text-2xl font-bold text-white text-center mb-4">
             Enter Sign-Up Details
           </h2>
 
