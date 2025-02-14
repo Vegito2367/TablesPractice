@@ -101,7 +101,7 @@ export default function Login() {
         <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button> */}
         {/* Title */}
         <h1 className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
-                Welcome Back to <span className="text-orange-400">MathQuest</span>! 🔢
+                Welcome Back to <span className="text-orange-400">MathVenture</span>! 
             </h1>
             <p className="text-xl text-gray-300 text-center mb-8 animate-flyIn">
                 Enter your login details to continue.

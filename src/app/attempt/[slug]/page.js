@@ -309,7 +309,9 @@ export default function Attempt({ params }) {
                     <h1 className="text-white text-5xl text-center font-serif font-bold my-6">
                         Get Ready To Math!
                     </h1>
-
+                    <h1 className="text-white text-3xl text-center font-serif font-bold my-6">
+                        Press Enter/Return to submit your answer!
+                    </h1>
 
                     <p className="text-3xl text-orange-400 text-center font-semibold my-4">
                         Attempt ID: {slug}
