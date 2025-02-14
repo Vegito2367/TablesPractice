@@ -84,8 +84,8 @@ export default function Login() {
   return (
     <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 1 }}>
       <section className="h-screen w-screen bg-gray-950 flex flex-col justify-center items-center">
-        <Button className="mb-4" variant="secondary" onClick={() => { redirect("/") }}>Go to Home</Button>
-        <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
+        <Button className="mb-4 bg-orange-500" onClick={() => { redirect("/") }}>Learn more</Button>
+        {/* <form className="flex flex-col space-y-4 px-10 w-1/2 animate-flyIn">
           <p className="text-4xl font-bold text-white mb-8">Enter your Login details</p>
           <div>
             <input name="username" id="username" type="text" placeholder="Username" className="bg-gray-800 text-white p-2 rounded w-full" />
@@ -98,7 +98,60 @@ export default function Login() {
             {loading ? "Please Wait" : "Submit"}
           </Button>
         </form>
-        <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button>
+        <Button className="text-white" variant="link" onClick={() => { redirect("/signup") }}>Sign Up</Button> */}
+        {/* Title */}
+        <h1 className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
+                Welcome Back to <span className="text-orange-400">MathQuest</span>! 🔢
+            </h1>
+            <p className="text-xl text-gray-300 text-center mb-8 animate-flyIn">
+                Enter your login details to continue.
+            </p>
+
+            {/* Login Form */}
+            <form className="flex flex-col space-y-4 bg-gray-800 px-8 py-6 w-full max-w-md rounded-lg shadow-lg animate-flyIn">
+                <h2 className="text-3xl font-bold text-white text-center mb-6">
+                    Login to Your Account
+                </h2>
+
+                {/* Username */}
+                <input 
+                    name="username" 
+                    id="username" 
+                    type="text" 
+                    placeholder="Username" 
+                    className="bg-gray-700 text-white p-3 rounded w-full border border-gray-600 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                />
+
+                {/* Password */}
+                <input 
+                    name="password" 
+                    id="password" 
+                    type="password" 
+                    placeholder="Password" 
+                    className="bg-gray-700 text-white p-3 rounded w-full border border-gray-600 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                />
+
+                {/* Submit Button */}
+                <button 
+                    className="h-12 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded transition-all duration-200 flex items-center justify-center disabled:opacity-50"
+                    disabled={loading}
+                    formAction={PreLogin}
+                >
+                    {loading && <Loader2 className="animate-spin mr-2" size={20} strokeWidth={2} />}
+                    {loading ? "Please Wait..." : "Log In"}
+                </button>
+            </form>
+
+            {/* Sign Up Redirect */}
+            <p className="mt-6 text-gray-300">
+                Don’t have an account?  
+                <button 
+                    className="ml-2 text-orange-400 hover:text-orange-300 font-semibold transition-all duration-200 underline"
+                    onClick={() => { redirect("/") }}
+                >
+                    Sign Up
+                </button>
+            </p>
       </section>
     </motion.div>
   );

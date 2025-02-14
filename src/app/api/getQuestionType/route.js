@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 export async function GET(request){
     const url = new URL(request.url);
     const attemptSlug = url.searchParams.get("slug");
-    console.log("questionType GET Request",attemptSlug)
+
     try{
         if(attemptSlug){
             const data = await getMathEngine(attemptSlug);
             const engine = await data.object;
-            console.log(engine);
+
             if(engine){
                 const types = await engine.types;
                 if(types){

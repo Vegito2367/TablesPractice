@@ -12,7 +12,6 @@ export async function POST(request){
     }
     try{
         const response = await createEngine(slug,cons);
-        console.log(response);
         return NextResponse.json({status: 200, response: response.message});
     }
     catch(e){

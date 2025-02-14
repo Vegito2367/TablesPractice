@@ -296,19 +296,29 @@ export default function Attempt({ params }) {
     else {
         return (
             <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
-                <section className="h-screen w-screen bg-gray-950 text-white">
+                <section className="h-screen w-screen bg-gray-950 text-white flex flex-col items-center">
                     <div className="flex flex-row justify-center gap-5 w-screen">
                         <div>
-                            <Button className="" variant="secondary" onClick={() => { redirect("/") }}>Home</Button>
+                            <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={() => { redirect("/") }}>Home</Button>
                         </div>
                         <div>
-                            <Button className="" variant="secondary" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
+                            <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={() => { redirect("/dashboard") }}>Dashboard</Button>
                         </div>
                     </div>
 
-                    <h1 className="text-white text-5xl text-center font-serif my-4">Get Ready To Math!</h1>
-                    <p className="text-3xl text-center my-4">Attempt ID: {slug}</p>
-                    <p className="text-2xl text-center my-3">user email: {data.response.user.email}</p>
+                    <h1 className="text-white text-5xl text-center font-serif font-bold my-6">
+                        Get Ready To Math!
+                    </h1>
+
+
+                    <p className="text-3xl text-orange-400 text-center font-semibold my-4">
+                        Attempt ID: {slug}
+                    </p>
+
+                    <p className="text-2xl text-gray-300 text-center my-3">
+                        User Email: <span className="text-white font-medium">{data.response.user.email}</span>
+                    </p>
+
                     <Timer totalTime={60} completionCallback={handleTimerEnd} preCallback={handleTimerStart} />
 
                     <AlertDialog open={showDialog} onOpenChange={handleDialog}>
@@ -325,7 +335,7 @@ export default function Attempt({ params }) {
 
                     {timerActive && (
                         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}
-                        className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
+                            className="flex flex-col justify-center items-center border-</div>white m-3 border-2 rounded-md p-4">
                             <div className="flex flex-col justify-center items-center">
                                 <p className="text-2xl mb-3">{currentQuestion.opA} {currentQuestion.symbol} {currentQuestion.opB} = </p>
                                 <form>
@@ -338,10 +348,9 @@ export default function Attempt({ params }) {
                             </div>
                         </motion.div>
                     )}
-                    <div className="text-center text-white text-3xl my-5">
-                        <p>Score: {correctAnswers}</p>
+                    <div className="text-center text-white w-7/12 text-3xl bg-gray-800 px-6 py-4 rounded-lg shadow-lg my-6">
+                        <p className="font-bold">Score: <span className="text-orange-400">{correctAnswers}</span></p>
                     </div>
-
 
 
 
