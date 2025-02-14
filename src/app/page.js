@@ -97,9 +97,10 @@ export default function Home() {
     }
     if (status === 200) {
       toast({
-        title: "Please confirm your email",
-        description: message,
+        title: "Sign Up complete",
+        description: response,
       })
+      router.push("/login")
 
     }
   }
@@ -166,7 +167,7 @@ export default function Home() {
           Already have an account? <span className="underline">Login</span>
         </button>
         <div onClick={() => { router.push("/about") }}
-          className="absolute bg-orange-300 text-black p-2 text-xl rounded-md text-center bottom-8 w-1/2 hover:bg-orange-500 cursor-pointer">
+          className="bg-orange-300 mt-4 text-black p-2 text-xl rounded-md text-center bottom-8 w-1/2 hover:bg-orange-500 cursor-pointer">
           Made with passion by Tej Gumaste - Learn More
         </div>
       </section>

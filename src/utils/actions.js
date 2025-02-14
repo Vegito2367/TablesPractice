@@ -12,7 +12,7 @@ export async function attemptSignup(signUpdata) {
         if(error.status === 422){
             return {status: 400, response: "Email already exists"}
         }
-        return {status: 400, response: error.message}
+        return {status: 400, response: error}
         
     }
     try{
