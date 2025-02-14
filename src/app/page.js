@@ -108,10 +108,10 @@ export default function Home() {
     <>
       <section className="h-screen bg-gray-950 flex flex-col justify-center items-center font-mono">
         <h1 className="text-5xl text-white font-bold text-center py-10 animate-flyIn">
-          Welcome to <span className="text-orange-400">MathQuest</span>! 🚀
+          Welcome to <span className="text-orange-400">MathVenture</span>! 🚀
         </h1>
         <p className="text-xl text-gray-300 text-center mb-8 animate-flyIn">
-          Sign up now and start your math journey!
+          Sign up now and start your MathVenture with us!
         </p>
 
 
