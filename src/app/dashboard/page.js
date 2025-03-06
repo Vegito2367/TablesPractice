@@ -28,6 +28,8 @@ export default function Dashboard() {
     const [props, setProps] = useState({});
     const [userID, setUserID] = useState("");
     const [attempts, setAttempts] = useState([]);
+    const [showAttempts, setShowAttempts] = useState(false);
+    const [showConstraints, setShowConstraints] = useState(true);
 
     useEffect(() => {
         async function checkUser() {
@@ -403,6 +405,16 @@ export default function Dashboard() {
             </>
         )
     }
+
+    function handleShowAttempts() {
+        setShowAttempts(true);
+        setShowConstraints(false);
+    }
+
+    function handleShowConstraints() {
+        setShowConstraints(true);
+        setShowAttempts(false);
+    }
     return (
         <motion.div animate={{ opacity: 1 }} initial={{ opacity: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.75 }}>
             <section className="w-screen bg-gray-950 font-mono">
@@ -434,8 +446,14 @@ export default function Dashboard() {
                             Logged in as: {data.response.user.email}
                         </p>
                     )}
+                    <div className="flex flex-row justify-center gap-5 mt-6">
+                        <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={handleShowAttempts}>Attempts</Button>
+                        <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={handleShowConstraints}>Constraints</Button>
+                    </div>
+
                     <div className="flex flex-row border-2 border-orange-500 rounded-lg m-2 font-mono">
-                        <div name="attempts" className="w-1/2 max-h-screen overflow-y-auto">
+                    {showAttempts && (
+                        <div name="attempts" className="max-h-screen overflow-y-auto w-full">
                             {userID && attempts.length === 0 && <Skeleton className="bg-slate-200" />}
                             {attempts.slice(0).reverse().map((attempt, index) => {
                                 return <Attempt key={index} numberOfQuestions={attempt.totalQuestions}
@@ -446,7 +464,9 @@ export default function Dashboard() {
                                 />
                             })}
                         </div>
-                        <div name="constraints" className="text-white w-1/2 items-center flex flex-col rounded-md">
+                    )}    
+                    {!showAttempts && (
+                        <div name="constraints" className="text-white w-full items-center flex flex-col rounded-md">
                             <form className="flex flex-col items-center gap-6 bg-gray-900 p-8 rounded-lg shadow-lg w-full max-w-3xl">
                                 <h2 className="text-3xl text-white font-bold text-center mb-4">Customize Your Math Practice</h2>
 
@@ -540,6 +560,8 @@ export default function Dashboard() {
                             </form>
 
                         </div>
+                    )}
+                        
                     </div>
 
                 </div>

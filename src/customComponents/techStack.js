@@ -9,7 +9,7 @@ export default function TechStack() {
 
     return (
         <section className="py-12 bg-gray-900 text-center w-6/12 rounded-xl shadow-xl shadow-orange-300 hover:shadow-orange-500">
-            <div className="flex justify-center gap-20 flex-wrap ">
+            <div className="flex flex-wrap justify-center gap-20">
                 {techs.map((tech) => (
                     <a
                         key={tech.name}
