@@ -114,7 +114,7 @@ export default function Home() {
         <p className="text-xl text-gray-300 text-center mb-8 animate-flyIn">
           Sign up now and start your MathVenture with us!
         </p>
-        <Button onClick={()=>{router.push("/test")}}>Test page</Button>
+        {/* <Button onClick={()=>{router.push("/test")}}>Test page</Button> */}
 
         <form className="flex flex-col space-y-4 bg-gray-800 px-8 py-6 w-full max-w-md rounded-lg shadow-lg animate-flyIn">
           <h2 className="text-2xl font-bold text-white text-center mb-4">
