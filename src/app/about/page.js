@@ -4,47 +4,47 @@ import Image from "next/image"
 import TechStack from "@/customComponents/techStack"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-export default function About(){
+export default function About() {
     const router = useRouter();
-    return(
+    return (
         <section className="bg-gray-950 flex flex-col items-center p-8">
-            <Button className="absolute top-5 left-5 bg-orange-400 hover:bg-orange-500" onClick={()=>{router.push("/")}}>Back</Button>
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:2}}
-            name="mainProfileContainer" className="flex flex-row shadow-xl shadow-orange-300 rounded-xl bg-slate-800 p-6 h-4/6 w-5/6 my-5 hover:shadow-orange-500">
-                <div name="photoContainer" className=" flex justify-center items-center">
+            <Button className="absolute top-3 left-5 bg-orange-400 hover:bg-orange-500" onClick={() => { router.push("/") }}>Back</Button>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
+                name="mainProfileContainer" className="flex flex-col 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col shadow-xl shadow-orange-300 rounded-xl bg-slate-800 p-6 h-4/6 w-5/6 my-5 hover:shadow-orange-500">
+                <div name="photoContainer" className="flex justify-center items-center w-auto h-full">
                     <Image src="/ProfilePic.jpeg" alt="Profile" className="rounded-md h-full" width={400} height={200} />
                 </div>
                 <div name="textContainer" className="w-2/3 flex flex-col justify-center p-4 font-mono gap-5">
                     <h2 className="text-4xl font-bold text-white mb-4 tracking-wide">
-                Hi, I’m <span className="text-orange-400">Tej</span> 👋
-            </h2>
-            <p className="text-lg leading-relaxed">
-                I’m a passionate <span className="text-white font-semibold">computer science student</span> with a strong interest in 
-                <span className="text-orange-400"> machine learning, data science</span>, and 
-                <span className="text-orange-400"> full-stack development</span>. My experience spans across building 
-                interpretable ML models in the medical field, crafting efficient backend systems, and working on innovative projects like 
-                <span className="text-white font-semibold"> MathVenture</span>, which challenges my ability to design scalable, performant applications.
-            </p>
-            <p className="text-lg leading-relaxed">
-                I thrive in problem-solving and I'm always willing to pick up new skills and technologies as I do exciting projects. Beyond technical skills, I value 
-                <span className="text-orange-400"> clean, maintainable code</span> and user-focused design, ensuring that the solutions I build are 
-                not only functional but also <span className="text-white font-semibold"> intuitive</span>.
-            </p>
-            
-            <p className="text-lg font-semibold text-white">
-                Let’s connect!
-            </p>
-                    
+                        Hi, I’m <span className="text-orange-400">Tej</span> 👋
+                    </h2>
+                    <p className="text-lg leading-relaxed">
+                        I’m a passionate <span className="text-white font-semibold">computer science student</span> with a strong interest in
+                        <span className="text-orange-400"> machine learning, data science</span>, and
+                        <span className="text-orange-400"> full-stack development</span>. My experience spans across building
+                        interpretable ML models in the medical field, crafting efficient backend systems, and working on innovative projects like
+                        <span className="text-white font-semibold"> MathVenture</span>, which challenges my ability to design scalable, performant applications.
+                    </p>
+                    <p className="text-lg leading-relaxed">
+                        I thrive in problem-solving and I'm always willing to pick up new skills and technologies as I do exciting projects. Beyond technical skills, I value
+                        <span className="text-orange-400"> clean, maintainable code</span> and user-focused design, ensuring that the solutions I build are
+                        not only functional but also <span className="text-white font-semibold"> intuitive</span>.
+                    </p>
+
+                    <p className="text-lg font-semibold text-white">
+                        Let’s connect!
+                    </p>
+
                 </div>
             </motion.div>
             <h2 className="text-5xl font-bold text-white my-6 tracking-wide">
                 Why <span className="text-orange-400">MathVenture?</span>
             </h2>
             <p className="text-lg text-gray-300 max-w-4xl leading-relaxed font-mono mb-6">
-                I made <span className="font-semibold text-orange-500">MathVenture</span> to help students build their 
-                speed and mental math skills in an interactive and accountable manner. Originally, 
-                MathVenture was a project made for my brother to improve his mental math skills. I first 
-                asked him to use <a href="https://arithmetic.zetamac.com" className="text-orange-400 underline">Zetamac</a> (also a very good website), 
+                I made <span className="font-semibold text-orange-500">MathVenture</span> to help students build their
+                speed and mental math skills in an interactive and accountable manner. Originally,
+                MathVenture was a project made for my brother to improve his mental math skills. I first
+                asked him to use <a href="https://arithmetic.zetamac.com" className="text-orange-400 underline">Zetamac</a> (also a very good website),
                 but I realized that tracking questions and progress is essential for improvement—thus, MathVenture was born.
             </p>
             <p className="text-lg text-gray-300 max-w-4xl leading-relaxed font-mono">
