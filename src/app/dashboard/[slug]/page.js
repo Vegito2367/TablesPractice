@@ -93,7 +93,7 @@ export default function AttemptPage() {
     }
     else {
         return (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen font-mono">
                 <div className="flex flex-row justify-center gap-5 py-4 w-screen">
                     <div>
                         <Button className="bg-orange-400 hover:bg-orange-500" onClick={() => { router.push("/dashboard") }}>Back To Dashboard</Button>
