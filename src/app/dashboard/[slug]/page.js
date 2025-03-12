@@ -55,14 +55,15 @@ export default function AttemptPage() {
             const response = await fetch(`/api/getAttempt?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();
             if (data.status===200){
-                console.log(data.payload)
-                const wrongQuestions = data.payload.total_questions - data.payload.num_correct;
-                const interDate = data.payload.created_at;
-                console.log(data.payload.created_at)
-                const date = interDate.substring(0, data.payload.created_at.indexOf("T"));
+
+                const attemptObject = data.payload[0]
+                console.log(attemptObject)
+                const wrongQuestions = attemptObject.total_questions - attemptObject.num_correct;
+
+                const date = attemptObject.created_at.substring(0, attemptObject.created_at.indexOf("T"));
                 const attemptProps = {
-                    numQuestions: data.payload.total_questions,
-                    numCorrect: data.payload.num_correct,
+                    numQuestions: attemptObject.total_questions,
+                    numCorrect: attemptObject.num_correct,
                     numWrong: wrongQuestions,
                     date: date
                 }
