@@ -20,16 +20,16 @@ export default function AttemptPage() {
     const [questions, setQuestions] = useState([]);
     useEffect(() => {
 
-        const numQ = searchParams.get("numQ");
-        const numR = searchParams.get("numR");
-        const numW = searchParams.get("numW");
-        const d = searchParams.get("date");
-        setAttemptProps({
-            numQuestions: numQ,
-            numCorrect: numR,
-            numWrong: numW,
-            date: d
-        })
+        // const numQ = searchParams.get("numQ");
+        // const numR = searchParams.get("numR");
+        // const numW = searchParams.get("numW");
+        // const d = searchParams.get("date");
+        // setAttemptProps({
+        //     numQuestions: numQ,
+        //     numCorrect: numR,
+        //     numWrong: numW,
+        //     date: d
+        // })
         async function checkUser() {
             try {
                 const sl = params.slug;
@@ -38,6 +38,7 @@ export default function AttemptPage() {
                 setData({ status: status, response: response });
                 setUserID(response.user.id)
                 retrieveQuestions(response.user.id, sl);
+                getAttemptDetails(response.user.id,sl);
 
             }
             catch (err) {
@@ -49,14 +50,39 @@ export default function AttemptPage() {
 
         checkUser();
     }, [])
-
+    async function getAttemptDetails(uID,aID){
+        try {
+            const response = await fetch(`/api/getAttempt?userID=${uID}&attemptID=${aID}`);
+            const data = await response.json();
+            if (data.status===200){
+                console.log(data.payload)
+                const wrongQuestions = data.payload.total_questions - data.payload.num_correct;
+                const interDate = data.payload.created_at;
+                console.log(data.payload.created_at)
+                const date = interDate.substring(0, data.payload.created_at.indexOf("T"));
+                const attemptProps = {
+                    numQuestions: data.payload.total_questions,
+                    numCorrect: data.payload.num_correct,
+                    numWrong: wrongQuestions,
+                    date: date
+                }
+                setAttemptProps(attemptProps);
+            }
+            else{
+                throw new Error(data.response)
+            }
+        }
+        catch (err){
+            console.log(err)
+        }
+    }
     async function retrieveQuestions(uID, aID) {
         console.log("attempt page", uID, aID)
         try {
             const response = await fetch(`/api/fetchQuestion?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();
             if (data.status === 200) {
-                console.log(data.payload)
+                // console.log(data.payload)
                 data.payload.forEach((elem) => {
                     const newQ = {
                         opA: elem.operand_a,
