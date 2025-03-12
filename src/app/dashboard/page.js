@@ -439,6 +439,9 @@ export default function Dashboard() {
                         Track your progress! Each attempt consists of a set number of questions, and
                         for each question, you can see the number of correct and incorrect responses.
                     </p>
+                    <p className="text-lg text-orange-300 text-center font-mono">
+                        Click a particular attempt under the attempts tab to see which questions you got right and wrong.
+                    </p>
 
 
                     {data?.response?.user?.email && (
@@ -451,9 +454,9 @@ export default function Dashboard() {
                         <Button className="bg-orange-400 font-bold hover:bg-orange-500" onClick={handleShowConstraints}>Constraints</Button>
                     </div>
 
-                    <div className="flex flex-row border-2 border-orange-500 rounded-lg m-2 font-mono">
+                    <div className="flex flex-row justify-center rounded-lg m-2 font-mono">
                     {showAttempts && (
-                        <div name="attempts" className="max-h-screen overflow-y-auto w-full">
+                        <div name="attempts" className="max-h-screen overflow-y-auto w-10/12">
                             {userID && attempts.length === 0 && <Skeleton className="bg-slate-200" />}
                             {attempts.slice(0).reverse().map((attempt, index) => {
                                 return <Attempt key={index} numberOfQuestions={attempt.totalQuestions}
@@ -472,7 +475,7 @@ export default function Dashboard() {
 
                                 <div className="flex flex-row justify-center gap-12 w-full">
                                     <div name="additionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Addition</p>
+                                        <p className="text-center text-xl md:text-2xl text-orange-400 font-semibold mb-4">Addition</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -492,7 +495,7 @@ export default function Dashboard() {
 
 
                                     <div name="subtractionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Subtraction</p>
+                                        <p className="text-center text-xl md:text-2xl text-orange-400 font-semibold mb-4">Subtraction</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -515,7 +518,7 @@ export default function Dashboard() {
                                 <div className="flex flex-row justify-center gap-12 w-full">
 
                                     <div name="multiplicationBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Multiplication</p>
+                                        <p className="text-center text-xl md:text-2xl text-orange-400 font-semibold mb-4">Multiplication</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>
@@ -535,7 +538,7 @@ export default function Dashboard() {
 
                                     {/* Division Box */}
                                     <div name="divisionBox" className="flex flex-col items-center w-1/2 bg-gray-800 p-6 rounded-lg shadow-md">
-                                        <p className="text-center text-2xl text-orange-400 font-semibold mb-4">Division</p>
+                                        <p className="text-center text-xl md:text-2xl text-orange-400 font-semibold mb-4">Division</p>
 
                                         <div className="flex flex-row gap-2 items-center">
                                             <p className="text-white">Lower Limit:</p>

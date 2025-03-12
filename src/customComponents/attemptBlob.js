@@ -16,10 +16,10 @@ export default function Attempt({ numberOfQuestions, numberOfRights, numberOfWro
     return (
         <>
             <div className={`${addRing} flex flex-col bg-gray-800 p-5 m-5 hover:bg-gray-900 mb-0 rounded-lg`} onClick={() => {
-                router.push(`/dashboard/${slug}?numQ=${numberOfQuestions}&numR=${numberOfRights}&numW=${numberOfWrongs}&date=${date}`)
+                router.push(`/dashboard/${slug}`)
             }}>
                 <p className="text-2xl">Date of attempt: {date}</p>
-                <p className="text-xl"> Attempt ID: {slug}</p>
+                {/* <p className="text-xl"> Attempt ID: {slug}</p> */}
                 <p className="text-md text-white text-left">Total Questions: {numberOfQuestions}</p>
                 <div className="w-full h-4 bg-slate-400 flex flex-row rounded-md">
                     <TooltipProvider>

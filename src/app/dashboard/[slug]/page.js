@@ -12,24 +12,14 @@ import { useRouter } from "next/navigation";
 export default function AttemptPage() {
     const router = useRouter();
     const params = useParams();
-    const searchParams = useSearchParams();
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
     const [data, setData] = useState({});
     const [attemptProps, setAttemptProps] = useState({});
     const [questions, setQuestions] = useState([]);
+
     useEffect(() => {
 
-        const numQ = searchParams.get("numQ");
-        const numR = searchParams.get("numR");
-        const numW = searchParams.get("numW");
-        const d = searchParams.get("date");
-        setAttemptProps({
-            numQuestions: numQ,
-            numCorrect: numR,
-            numWrong: numW,
-            date: d
-        })
         async function checkUser() {
             try {
                 const sl = params.slug;
@@ -38,6 +28,7 @@ export default function AttemptPage() {
                 setData({ status: status, response: response });
                 setUserID(response.user.id)
                 retrieveQuestions(response.user.id, sl);
+                getAttemptDetails(response.user.id,sl);
 
             }
             catch (err) {
@@ -49,14 +40,37 @@ export default function AttemptPage() {
 
         checkUser();
     }, [])
+    async function getAttemptDetails(uID,aID){
+        try {
+            const response = await fetch(`/api/getAttempt?userID=${uID}&attemptID=${aID}`);
+            const data = await response.json();
+            if (data.status===200){
+                const attemptObject = data.payload[0]
+                const wrongQuestions = attemptObject.total_questions - attemptObject.num_correct;
 
+                const date = attemptObject.created_at.substring(0, attemptObject.created_at.indexOf("T"));
+                const attemptProps = {
+                    numQuestions: attemptObject.total_questions,
+                    numCorrect: attemptObject.num_correct,
+                    numWrong: wrongQuestions,
+                    date: date
+                }
+                setAttemptProps(attemptProps);
+            }
+            else{
+                throw new Error(data.response)
+            }
+        }
+        catch (err){
+            console.log(err)
+        }
+    }
     async function retrieveQuestions(uID, aID) {
-        console.log("attempt page", uID, aID)
         try {
             const response = await fetch(`/api/fetchQuestion?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();
             if (data.status === 200) {
-                console.log(data.payload)
+                // console.log(data.payload)
                 data.payload.forEach((elem) => {
                     const newQ = {
                         opA: elem.operand_a,
@@ -93,7 +107,7 @@ export default function AttemptPage() {
     }
     else {
         return (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1 }} className="bg-gray-950 w-screen font-mono">
                 <div className="flex flex-row justify-center gap-5 py-4 w-screen">
                     <div>
                         <Button className="bg-orange-400 hover:bg-orange-500" onClick={() => { router.push("/dashboard") }}>Back To Dashboard</Button>

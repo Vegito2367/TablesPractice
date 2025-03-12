@@ -18,8 +18,8 @@ export default function TechStack() {
                         rel="noopener noreferrer"
                         className="flex flex-col items-center space-y-2 transform transition-all hover:scale-110"
                     >
-                        <img src={tech.logo} alt={tech.name} className="h-16" />
-                        <span className="text-gray-300 text-lg font-mono">{tech.name}</span>
+                        <img src={tech.logo} alt={tech.name} className="h-8 lg:h-16" />
+                        <span className="text-gray-300 text-sm lg:text-lg font-mono">{tech.name}</span>
                     </a>
                 ))}
             </div>
