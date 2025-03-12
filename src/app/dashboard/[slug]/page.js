@@ -12,24 +12,14 @@ import { useRouter } from "next/navigation";
 export default function AttemptPage() {
     const router = useRouter();
     const params = useParams();
-    const searchParams = useSearchParams();
     const [slug, setSlug] = useState("");
     const [userID, setUserID] = useState("");
     const [data, setData] = useState({});
     const [attemptProps, setAttemptProps] = useState({});
     const [questions, setQuestions] = useState([]);
+
     useEffect(() => {
 
-        // const numQ = searchParams.get("numQ");
-        // const numR = searchParams.get("numR");
-        // const numW = searchParams.get("numW");
-        // const d = searchParams.get("date");
-        // setAttemptProps({
-        //     numQuestions: numQ,
-        //     numCorrect: numR,
-        //     numWrong: numW,
-        //     date: d
-        // })
         async function checkUser() {
             try {
                 const sl = params.slug;
@@ -55,9 +45,7 @@ export default function AttemptPage() {
             const response = await fetch(`/api/getAttempt?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();
             if (data.status===200){
-
                 const attemptObject = data.payload[0]
-                console.log(attemptObject)
                 const wrongQuestions = attemptObject.total_questions - attemptObject.num_correct;
 
                 const date = attemptObject.created_at.substring(0, attemptObject.created_at.indexOf("T"));
@@ -78,7 +66,6 @@ export default function AttemptPage() {
         }
     }
     async function retrieveQuestions(uID, aID) {
-        console.log("attempt page", uID, aID)
         try {
             const response = await fetch(`/api/fetchQuestion?userID=${uID}&attemptID=${aID}`);
             const data = await response.json();

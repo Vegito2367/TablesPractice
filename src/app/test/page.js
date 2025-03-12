@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import validateLogin from "../middle"
+import { useToast } from "@/hooks/use-toast";
 
 export default function TestPage() {
 
@@ -16,6 +17,7 @@ export default function TestPage() {
     const [userID, setUserID] = useState("");
     const [loggedIn,setLoggedIn]=useState(false);
     const myAttempt = "RmIViktB";
+    const { toast } = useToast();
     useEffect(()=>{
         async function checkUser() {
             try {
@@ -46,16 +48,24 @@ export default function TestPage() {
             console.log(err)
         }
     }
-    function showTest()
+    async function showTest()
     {
-        
-        if(password==="010604")
-        {
-            setTestMode(true)
+        const response = await fetch("/api/verifyPassword",{
+            method: "POST",
+            body: JSON.stringify({password: password})
+        });
+        const data = await response.json();
+        if(data.status===200){
+            setTestMode(true);
         }
         else{
-            setTestMode(false)
+            toast({
+                variant: "destructive",
+                title: "Logout failed",
+                description: response,
+            })
         }
+        
     }
     if(!loggedIn){
         return(
