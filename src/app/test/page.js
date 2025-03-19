@@ -55,14 +55,20 @@ export default function TestPage() {
             body: JSON.stringify({password: password})
         });
         const data = await response.json();
+        console.log(data); 
         if(data.status===200){
             setTestMode(true);
+            toast({
+                variant: "primary",
+                title: "Login successful",
+                description: data.response,
+            })
         }
         else{
             toast({
                 variant: "destructive",
                 title: "Logout failed",
-                description: response,
+                description: data.response,
             })
         }
         

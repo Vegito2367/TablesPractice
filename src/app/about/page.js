@@ -4,19 +4,29 @@ import Image from "next/image"
 import TechStack from "@/customComponents/techStack"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 export default function About() {
     const router = useRouter();
     return (
-        <section className="bg-gray-950 flex flex-col items-center p-8">
+        <section className="bg-gray-950 flex flex-col items-center p-8 font-mono">
             <Button className="absolute top-3 left-5 bg-orange-400 hover:bg-orange-500" onClick={() => { router.push("/") }}>Back</Button>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
                 name="mainProfileContainer" className="flex flex-col 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col shadow-xl shadow-orange-300 rounded-xl bg-slate-800 p-6 h-4/6 w-5/6 my-5 hover:shadow-orange-500">
                 <div name="photoContainer" className="flex flex-col justify-center items-center w-auto h-full">
                     <Image src="/ProfilePic.jpeg" alt="Profile" className="rounded-md h-full" width={400} height={200} />
+                    <div className="flex flex-row w-full items-center justify-evenly gap-2 my-4">
+                        <Link className="text-orange-400 underline hover:scale-105" target="_blank" href="https://www.linkedin.com/in/tej-gumaste-8b3a0b1b0/">
+                            <img src="/linkedin.svg" alt="linkedin" className="h-10" />
+                        </Link>
+                        <Link className="text-orange-400 underline hover:scale-105" target="_blank" href="https://github.com/Vegito2367">
+                            <img src="/github.svg" alt="github" className="h-10" />
+                        </Link>
+                    </div>
+
                 </div>
-                <div name="textContainer" className="w-10/12 flex flex-col justify-center p-4 font-mono gap-5">
+                <div name="textContainer" className="w-10/12 flex flex-col justify-center lg:p-4 font-mono gap-5">
                     <h2 className="text-xl lg:text-4xl font-bold text-white mb-4 tracking-wide">
-                        Hi, I’m <span className="text-orange-400">Tej</span> 👋
+                        Hi! I’m <span className="text-orange-400">Tej</span>
                     </h2>
                     <p className="text-sm lg:text-lg leading-relaxed">
                         I’m a passionate <span className="text-white font-semibold">computer science student</span> with a strong interest in
