@@ -1,4 +1,4 @@
-# MathQuest - Dynamic Question Generator
+# MathVenture - Dynamic Question Generator
 
 ## 🚀 Overview
 Math Engine is a **full-stack Next.js application** that dynamically generates math problems for users in real time. Designed to be **scalable and efficient**, this project features a custom-built **Math Engine** on the server side that generates and manages math questions per user attempt. The system is optimized for low-latency, ensuring seamless user interaction.
